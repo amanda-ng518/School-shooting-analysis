@@ -23,30 +23,10 @@ ncol(data)
 # Change all blank string into NA
 data <- data %>%
   mutate(across(where(is.character), ~ na_if(., "")))
-
-# Missing values in interested variables
-# Exclude id, geographical and temporal variables
-# Exclude low grade, high grade of the school offers 
-# Exclude staffing
-
-interested_var = data %>%
-  select(killed, injured, school_type, shooting_type, 
-         age_shooter1,gender_shooter1, age_shooter2,gender_shooter2,
-         enrollment, white, lunch, 
-         resource_officer, weapon, weapon_source)
-
-missing_table <- data.frame(
-  Missing_Count = colSums(is.na(interested_var)),
-  `Missing_Proportion` = round(colSums(is.na(interested_var)) / nrow(interested_var)*100,2)
-)
-missing_table <- subset(missing_table, Missing_Proportion > 0)
-kable(missing_table, caption = "Proportion of missing values in each variable")
-
-# Only 3 observations have a second shooter
-# Almost 45% observations have a missing resource_officer information -> hard to impute
-# More than 40% observations have missing weapon information -> hard to impute and too specific
-# More than 75% observations have missing weapon source information -> hard to impute and too specific
-# 130 obs with missing shooter age
+# Clean string representations
+# State
+data <- data %>%
+  mutate(state = state %>%str_trim())  # remove leading/trailing spaces
 
 # Shooting type
 unique(data$shooting_type)
@@ -62,17 +42,80 @@ data <- data %>%
       str_replace_all("uclear", "unclear") %>%    # fix typo
       str_replace_all("public suicide \\(attempted\\)", "public suicide") %>%
       str_replace_all("^suicide$", "public suicide"),              # exact match only
-    shooting_type = if_else(is.na(shooting_type), "unclear", shooting_type), # NA → unclear
     shooting_type = str_to_title(shooting_type)   # pretty capitalization
+  )
+#--------------Keep relevant variables-------------------#
+# Exclude id, geographical and temporal variables
+# Exclude low grade, high grade of the school offers, staffing 
+interested_var = data %>%
+  select(killed, injured, school_type, shooting_type, 
+         age_shooter1,gender_shooter1, age_shooter2,gender_shooter2,
+         enrollment, white, lunch, 
+         resource_officer, weapon, weapon_source,state)
+
+#--------------Missing values------------------#
+missing_table <- data.frame(
+  Missing_Count = colSums(is.na(interested_var)),
+  `Missing_Proportion` = round(colSums(is.na(interested_var)) / nrow(interested_var)*100,2)
+)
+missing_table <- subset(missing_table, Missing_Proportion > 0)
+kable(missing_table, caption = "Proportion of missing values in each variable")
+
+# Only 3% observations have a second shooter
+# Almost 45% observations have a missing resource_officer information -> hard to impute
+# More than 40% observations have missing weapon information -> hard to impute and too specific
+# More than 75% observations have missing weapon source information -> hard to impute and too specific
+# 130 obs with missing shooter age
+
+#------------------Impute data--------------------#
+# Shooting type
+data <- data %>%
+  mutate(
+    shooting_type = if_else(is.na(shooting_type), "Unclear", shooting_type), # NA → unclear
   )
 unique(data$shooting_type)
 
-# Shooter age by mean of shooting type
+# --- 2. Impute age_shooter1 ---
+data <- data %>%
+  # Compute group mean by shooting_type × state
+  group_by(shooting_type, state) %>%
+  mutate(group_mean_age = mean(age_shooter1, na.rm = TRUE)) %>%
+  ungroup() %>%
+  # Compute state mean as fallback
+  group_by(state) %>%
+  mutate(state_mean_age = mean(age_shooter1, na.rm = TRUE)) %>%
+  ungroup() %>%
+  # Impute: use group mean if available, else state mean
+  mutate(
+    age_shooter1 = coalesce(age_shooter1, group_mean_age, state_mean_age)
+  ) %>%
+  select(-group_mean_age, -state_mean_age)  # remove helper columns
 
+# --- 3. Impute gender_shooter1 probabilistically ---
+# Compute state-level male proportion
+state_prop <- data %>%
+  group_by(state) %>%
+  summarise(state_prop_m = mean(gender_shooter1 == "m", na.rm = TRUE), .groups = "drop")
 
-# Shooter gender (probability) by mean of shooting type
+# Compute overall proportion as fallback
+overall_prop_m <- mean(data$gender_shooter1 == "m", na.rm = TRUE)
 
-
+# Join state proportions
+data <- data %>%
+  left_join(state_prop, by = "state") %>%
+  rowwise() %>%
+  mutate(
+    gender_shooter1 = if_else(
+      is.na(gender_shooter1),
+      {
+        prob_m <- ifelse(is.na(state_prop_m), overall_prop_m, state_prop_m)
+        sample(c("m", "f"), size = 1, replace = TRUE, prob = c(prob_m, 1 - prob_m))
+      },
+      gender_shooter1
+    )
+  ) %>%
+  ungroup() %>%
+  select(-state_prop_m)
 
 
 # -----------------------------------------------------------
