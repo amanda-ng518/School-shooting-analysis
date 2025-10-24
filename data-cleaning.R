@@ -6,7 +6,7 @@ library(dplyr)
 library(arrow)
 library(knitr)
 library(stringr)
-library(ggplot2)
+
 # -----------------------------------------------------------
 # 2. Read in the data 
 # -----------------------------------------------------------
@@ -191,132 +191,10 @@ data <- data %>%mutate(
     non_white_prop = 1 - white / enrollment
   )
 
-# -----------------------------------------------------------
-# 3. Summary statistics
-# -----------------------------------------------------------
 # Dataset for analysis
 shootings <- data%>%select(killing_indicator, injured_indicator, school_type, shooting_type, 
                            age_shooter1,gender_shooter1, shooter_relationship1,
                            non_white_prop, lunch_prop)
 
-# Shooter Age by Shooting Type
-shooter_age_summary_table <- shootings %>%
-  group_by(as.factor(shooting_type)) %>%
-  summarise(
-    n = sum(!is.na(age_shooter1)),
-    mean = mean(age_shooter1, na.rm = TRUE),
-    median = median(age_shooter1, na.rm = TRUE),
-    sd = sd(age_shooter1, na.rm = TRUE),
-    min = min(age_shooter1, na.rm = TRUE),
-    max = max(age_shooter1, na.rm = TRUE)
-  ) %>%
-  mutate(across(where(is.numeric), ~ round(., 2)))
-kable(shooter_age_summary_table, caption = "Summary Statistics of Shooter Age by Shooting Type")
-
-# Numeric variables by killing indicator
-numeric_vars <- c("age_shooter1", "non_white_prop", "lunch_prop")
-
-num_summary <- data %>%
-  group_by(killing_indicator) %>%
-  summarise(across(all_of(numeric_vars),
-                   list(mean = ~mean(., na.rm=TRUE),
-                        sd = ~sd(., na.rm=TRUE),
-                        median = ~median(., na.rm=TRUE),
-                        min = ~min(., na.rm=TRUE),
-                        max = ~max(., na.rm=TRUE)),
-                   .names = "{.col}_{.fn}")) %>%
-  ungroup()
-
-kable(num_summary, caption = "Summary of numeric variables by killing indicator")
-
-# Proportion of shooter age distribution
-ggplot(shootings, aes(x = age_shooter1, fill = killing_indicator)) +
-  geom_histogram(aes(y = after_stat(density)),
-                 position = "identity", alpha = 0.5, bins = 40) +
-  scale_fill_manual(values = c("1" = "red", "0" = "blue"),
-                    name = "Killing occurred",
-                    labels = c("No", "Yes")) +
-  labs(title = "Distribution of Shooter Age by Killing Indicator",
-       x = "Shooter age",
-       y = "Density") +
-  theme_minimal()+
-  theme(
-    plot.title = element_text(size = 14),
-    axis.title = element_text(size = 11),
-    axis.text = element_text(size = 11),
-    legend.title = element_text(size = 11),
-    legend.text = element_text(size = 11),
-    legend.position = c(0.95, 0.95),   # (x, y) position inside the plot
-    legend.justification = c("right", "top"),
-    legend.background = element_rect(fill = "white", color = "black", linewidth = 0.3),
-  )
-
-# Proportion of Non-white student distribution
-ggplot(shootings, aes(x = non_white_prop, fill = killing_indicator)) +
-  geom_histogram(aes(y = after_stat(density)),
-                 position = "identity", alpha = 0.5, bins = 40) +
-  scale_fill_manual(values = c("1" = "red", "0" = "blue"),
-                    name = "Killing occurred",
-                    labels = c("No", "Yes")) +
-  labs(title = "Distribution of Proportion of Non-white student by Killing Indicator",
-       x = "Proportion of Non-white student",
-       y = "Density") +
-  theme_minimal()+
-  theme(
-    plot.title = element_text(size = 14),
-    axis.title = element_text(size = 11),
-    axis.text = element_text(size = 11),
-    legend.title = element_text(size = 11),
-    legend.text = element_text(size = 11),
-    legend.position = c(0.95, 0.95),   # (x, y) position inside the plot
-    legend.justification = c("right", "top"),
-    legend.background = element_rect(fill = "white", color = "black", linewidth = 0.3),
-  )
-
-# Proportion of lunch distribution
-ggplot(shootings, aes(x = lunch_prop, fill = killing_indicator)) +
-  geom_histogram(aes(y = after_stat(density)),
-                 position = "identity", alpha = 0.5, bins = 40) +
-  scale_fill_manual(values = c("1" = "red", "0" = "blue"),
-                    name = "Killing occurred",
-                    labels = c("No", "Yes")) +
-  labs(title = "Distribution of Proportion of lunch by Killing Indicator",
-       x = "Proportion of Lunch",
-       y = "Density") +
-  theme_minimal()+
-  theme(
-    plot.title = element_text(size = 14),
-    axis.title = element_text(size = 11),
-    axis.text = element_text(size = 11),
-    legend.title = element_text(size = 11),
-    legend.text = element_text(size = 11),
-    legend.position = c(0.95, 0.95),   # (x, y) position inside the plot
-    legend.justification = c("right", "top"),
-    legend.background = element_rect(fill = "white", color = "black", linewidth = 0.3),
-  )
-
-# Categorical vs killing indicator (proportion bar plots)
-categorical_vars <- c("injured_indicator", "school_type", "shooting_type",
-                      "gender_shooter1", "shooter_relationship1")
-for (var in categorical_vars) {
-  ggplot(data, aes_string(x = var, fill = "factor(killing_indicator)")) +
-    geom_bar(aes(y = ..prop.., group = killing_indicator), 
-             position = position_dodge(width = 0.9)) +
-    scale_fill_manual(
-      values = c("0" = "blue", "1" = "red"), 
-      labels = c("No Killing", "Killing")
-    ) +
-    labs(x = var, y = "Proportion", fill = "Killing Indicator") +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) -> p
-  print(p)
-}
-
-# Numeric vs killing indicator (boxplots)
-for (var in numeric_vars) {
-  ggplot(data, aes_string(x="factor(killing_indicator)", y=var)) +
-    geom_boxplot() +
-    labs(x = "Killing Indicator", y = var) +
-    theme_minimal() -> p
-  print(p)
-}
+# Save dataset
+write_parquet(shootings, "shootings_cleaned.parquet")
