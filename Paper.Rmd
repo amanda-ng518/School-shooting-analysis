@@ -5,7 +5,7 @@ date: "2025-10-25"
 output: pdf_document
 ---
 
-```{r}
+```{r, include=FALSE}
 # Load packages
 library(tidyr)
 library(dplyr)
@@ -21,32 +21,31 @@ library(pROC)
 
 # 1. Introduction
 
-Gun violence in schools remains one of the most distressing manifestations of firearm-related harm in the United States (citation). Each incident not only causes immediate loss and trauma but also heightens public concern over the safety of educational environments. Yet, relatively little is known about why some school shootings result in fatalities while others do not. 
-A clearer grasp of these determinants is essential for developing data-driven prevention strategies and guiding school safety policies. Previous research has examined individual-level factors such as shooter motivation, access to firearms, and mental health (citation). Fewer studies, however, have focused on contextual-level characteristics—that is, features of the incident and school environment that may influence whether a shooting becomes fatal. This study addresses that gap by identifying contextual factors that heighten the risk of fatalities, offering valuable insights for anticipating and mitigating the most severe outcomes of school shootings.
+Gun violence in schools remains one of the most distressing forms of firearm-related harm in the United States (citation). Each incident causes immediate loss and trauma while also increasing public concern over the safety of educational environments. Despite ongoing research, relatively little is known about why some school shootings result in fatalities while others do not. Understanding these factors is important for informing prevention strategies and school safety policies. Previous studies have examined individual-level factors such as shooter motivation, access to firearms, and mental health (citation). Fewer studies have examined contextual-level characteristics—features of the incident and school environment that may affect whether a shooting results in a fatality. This study examines these contextual factors to identify conditions that are associated with higher likelihoods of fatal outcomes.
 
-The estimand of interest is the probability that a school shooting results in at least one fatality. Using logistic regression, we modeled this probability as a function of several contextual characteristics, including whether the incident involved any injuries, the shooting type, the shooter’s demographics and relationship to the school community, and the broader racial and socioeconomic composition of the school.
+The analysis draws on The Washington Post School Shootings Database, which documents every act of gunfire on U.S. primary and secondary school campuses during school hours since 1999. The estimand of interest is the probability that a school shooting results in at least one fatality. Using logistic regression, we modeled this probability as a function of several contextual characteristics, including whether the incident involved any injuries, the shooting type, the shooter’s demographics and relationship to the school community, and the broader racial and socioeconomic composition of the school.
 
-Results show that shootings involving at least one injury, those classified as targeted attacks, and those committed by shooters with no apparent or unknown relationship to the school were significantly more likely to result in fatalities. These findings suggest that shootings perpetrated by individuals with no direct relationship to the school are less predictable and may be characterized by greater intent or premeditation. Sich such incidents fall outside the scope of internal monitoring systems focused on students and staff, they highlight the importance of strengthening external security coordination—including access control for school facilities, improved information sharing with law enforcement and between schools, and preparedness for rapid emergency response. Understanding these patterns provides a foundation for more effective risk assessment, prevention strategies, and resource allocation to protect students and school communities.
+Results show that shootings involving at least one injury, those classified as targeted attacks, and those committed out by shooters with no apparent or direct relationship to the school were more likely to result in fatalities. Shootings by individuals with no direct relationship to the school appear less predictable and may involve higher intent or premeditation. As such incidents are outside the reach of internal monitoring systems focused on students and staff, these findings emphasize the importance of external security measures, including controlled access to school facilities, improved information sharing with law enforcement and between schools, and preparedness for emergency response. Examining these patterns contributes to understanding the factors associated with school shooting fatality and can support the development of measures to reduce harm to students and school communities.
 
 Section 2: Data describes the data source, alongside the cleaning and 
-preparation of the data set for analysis. A summary of key variables and exploratory data 
-visualizations is also presented. Section 3: Modelling explains the modeling approach, 
-logistic regression model, used to analyze the relationship between the likelihood of fatality and 
-shooting events' contextual characteristics, along with justifications of 
-appropriateness of the model design. Section 4: Results & Discussion presents 
-the results and interprets the significance of the predictors considered on dropout risk. 
-Limitations of the study, including data quality and practical usability of
-the models, are also discussed. Finally, Section 5: Conclusion summarizes the key insights and outlines the
-next steps for future studies. Supporting information, including model assumptions and checks, is provided
-in the Section 6: Appendix.
+preparation of the dataset for analysis. A summary of key variables and exploratory data 
+visualizations is also presented. Section 3: Modelling explains the logistic regression approach
+used to analyze the relationship between fatality likelihood and contextual characteristics, 
+along with justifications for the model design. Section 4: Results & Discussion presents 
+the results and interprets the effects of predictors, as well as limitations of the study, including data quality and practical applicability of the models. Section 5: Conclusion summarizes the main findings and outlines directions for future studies. Supporting information, including model assumptions and diagnostic checks, is provided in Section 6: Appendix.
 
 # 2. Data
 
 ## 2.1 Data source
 
+The study draws on The Washington Post School Shootings Database (citation), a systematically compiled record of firearm incidents occurring at U.S. primary and secondary schools during school hours since the Columbine High School shooting on April 20, 1999. The database was developed by integrating multiple information channels, including Nexis archives, news reports, open-source databases, law enforcement records, school websites, and direct communications with school and police officials. Incidents were included only if gunfire occurred on campus immediately before, during, or after classes, thereby excluding after-hours events, accidental discharges injuring only the shooter, and suicides that posed no threat to others. Since no federal agency tracks school shootings, The Washington Post database represents one of the most comprehensive and systematically verified datasets available for studying these events. It further incorporates school-level demographic and enrollment information from the U.S. Department of Education’s Common Core of Data and Private School Universe Survey, allowing for contextual analyses of how school characteristics relate to the severity of shooting incidents.
+
 ## 2.2 Data description
 
 ## 2.3 Data cleaning
+
+
+R version and packages (citation)
 
 ## 2.4 Data summary and visualizations
 
