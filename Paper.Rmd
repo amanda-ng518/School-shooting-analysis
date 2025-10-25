@@ -15,6 +15,9 @@ library(ggplot2)
 library(car)      
 library(broom)
 library(pROC)
+
+# Load data
+shootings = read_parquet("shootings_cleaned.parquet")
 ```
 
 # Abstract
@@ -40,14 +43,70 @@ the results and interprets the effects of predictors, as well as limitations of 
 
 The study draws on The Washington Post School Shootings Database (citation), a systematically compiled record of firearm incidents occurring at U.S. primary and secondary schools during school hours since the Columbine High School shooting on April 20, 1999. The database was developed by integrating multiple information channels, including Nexis archives, news reports, open-source databases, law enforcement records, school websites, and direct communications with school and police officials. Incidents were included only if gunfire occurred on campus immediately before, during, or after classes, thereby excluding after-hours events, accidental discharges injuring only the shooter, and suicides that posed no threat to others. Since no federal agency tracks school shootings, The Washington Post database represents one of the most comprehensive and systematically verified datasets available for studying these events. It further incorporates school-level demographic and enrollment information from the U.S. Department of Education’s Common Core of Data and Private School Universe Survey, allowing for contextual analyses of how school characteristics relate to the severity of shooting incidents.
 
-## 2.2 Data description
+## 2.2 Data overview
 
-## 2.3 Data cleaning
+The raw data consists of 428 recorded school shooting incidents in the United States, spanning the period from April 20, 1999 onward. Each observation represents a distinct shooting event, and the dataset contains 50 variables, including identifiers for the school and district, temporal and geographic information, shooter demographic characteristics, shooting outcomes (number of killed and injured), school enrollment and students' demographics, and other factors such as the presence of a school resource officer. The dataset also includes detailed information on casualties, shooting type, and weapons involved. Variables of primary interest for this study include indicators of fatalities and injuries, shooting type, the shooter’s relationship to the school, demographic characteristics of the school population, and other contextual features that may influence the severity of the incident.
+
+## 2.21 Data cleaning
 
 
 R version and packages (citation)
 
-## 2.4 Data summary and visualizations
+## 2.22 Data description
+
+```{r,include=FALSE}
+# Compute raw data dimensions
+nrow(shootings) # Total = 427
+ncol(shootings) # Total = 9
+```
+
+The cleaned data consists of 427 observations and 9 variables. Below is a summary description of all variables in the cleeaned dataset.
+
+```{r, echo=FALSE}
+# Create a data frame
+data_description <- data.frame(
+  Variable = c(
+    "Killing",
+    "Injured",
+    "School Type",
+    "Shooting Type",
+    "Shooter Age",
+    "Shooter Gender",
+    "Shooter Relationship",
+    "Non-white Proportion",
+    "Lunch Proportion"
+  ),
+  Type  = c(
+    "Binary",
+    "Binary ",
+    "Categorical ",
+    "Categorical ",
+    "Numerical",
+    "Categorical ",
+    "Categorical",
+    "Numerical ",
+    "Numerical"
+  ),
+  Categories_or_Range = c(
+    "1 = At least one killing (excluding shooter) occured",
+    "1 = At least one injured (excluding shooter) occured",
+    "Public, Private",
+    "Indiscriminate, Targeted, Accidental, Suicide, Unclear",
+    "6 to 74",
+    "Male, Female",
+    "Current Student, Former Student, Family/Guardian of Student, Non-Security Staff, Police/Security, Other/Unknown/No Connection",
+    "0 to 1",
+    "0 to 1"
+  )
+)
+
+# Print the table using kable
+kable(data_description, format = "markdown", col.names = c("Variable", "Type", "Categories/Range"))
+
+```
+
+
+## 2.3 Data summary and visualizations
 
 
 # 5. Conclusion
@@ -56,3 +115,5 @@ Such shooters may enter the school with higher intent or preparation, possibly b
 schools canit easily prevent these attacks directly — but it highlights a different area of vulnerability and thus a different kind of prevention need:It suggests that school safety cannot rely solely on internal behavioral monitoring (e.g., identifying at-risk students).
 There is a need for stronger external security coordination — for instance, improving access control, visitor screening, and information sharing between schools, law enforcement, and community organizations.
 It also underscores the importance of rapid emergency response and preparedness training, since these events tend to be sudden and high-lethality when they occur.
+
+# Appendix
