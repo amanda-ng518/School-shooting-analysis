@@ -34,11 +34,11 @@ numeric_vars <- c("age_shooter1", "non_white_prop", "lunch_prop")
 make_summary <- function(df) {
   df %>%
     summarise(across(all_of(numeric_vars),
-                     list(mean = ~mean(., na.rm = TRUE),
-                          sd = ~sd(., na.rm = TRUE),
-                          median = ~median(., na.rm = TRUE),
-                          min = ~min(., na.rm = TRUE),
-                          max = ~max(., na.rm = TRUE)),
+                     list("Mean" = ~mean(., na.rm = TRUE),
+                          "Standard Deviation" = ~sd(., na.rm = TRUE),
+                          "Median" = ~median(., na.rm = TRUE),
+                          "Min" = ~min(., na.rm = TRUE),
+                          "Max" = ~max(., na.rm = TRUE)),
                      .names = "{.fn}_{.col}")) %>%
     pivot_longer(
       everything(),
@@ -46,7 +46,7 @@ make_summary <- function(df) {
       names_pattern = "^(.*?)_(.*)$"
     ) %>%
     pivot_wider(names_from = Variable, values_from = value) %>%
-    mutate(Measure = factor(Measure, levels = c("mean", "sd", "median", "min", "max")))
+    mutate(Measure = factor(Measure, levels = c("Mean", "Standard Deviation", "Median", "Min", "Max")))
 }
 
 table_names <- c(
@@ -189,18 +189,18 @@ categorical_vars <- c("injured_indicator", "school_type", "shooting_type",
 shooting_type_yes <- killing_yes_data %>%
   group_by(shooting_type) %>%
   summarise(shooting_type_percent = round(n()/n_yes*100, 2)) %>%
-  mutate("Killing Occured" = "Yes")
-
-shooting_type_no <- killing_no_data %>%
-  group_by(shooting_type) %>%
-  summarise(shooting_type_percent = round(n() / n_no * 100, 2), .groups = "drop") %>%
-  mutate(`Killing Occured` = "No") %>%
+  mutate("Killing Occured" = "Yes")%>%
   # Add the missing categories and set 0
   bind_rows(tibble(
     shooting_type = c("Suicide"),
     shooting_type_percent = 0,
-    `Killing Occured` = "No"
+    `Killing Occured` = "Yes"
   ))
+
+shooting_type_no <- killing_no_data %>%
+  group_by(shooting_type) %>%
+  summarise(shooting_type_percent = round(n() / n_no * 100, 2), .groups = "drop") %>%
+  mutate(`Killing Occured` = "No") 
 
 shooting_type_combined_data <- bind_rows(shooting_type_yes, shooting_type_no)
 
@@ -215,10 +215,10 @@ ggplot(shooting_type_combined_data, aes(x = shooting_type, y = shooting_type_per
   ) +
   scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
   theme_minimal()+ 
-  theme(axis.text.x = element_text(size = 8,angle = 45, hjust = 1),
+  theme(axis.text.x = element_text(size = 10,angle = 45, hjust = 1),
         axis.title.x =element_text(size = 12),
         axis.title.y =element_text(size = 12),
-        plot.title = element_text(size = 16),
+        plot.title = element_text(size = 14),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 12))
 

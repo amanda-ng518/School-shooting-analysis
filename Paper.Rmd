@@ -49,7 +49,9 @@ The raw data consists of 428 recorded school shooting incidents in the United St
 
 ## 2.3 Data cleaning
 
-To address inconsistencies and typos in categorical variables, we cleaned and standardized their string representations. For "shooting type", the original categories included “unclear”, “public suicide”, “hostage suicide”, “accidental” and “targeted.” To simplify analysis and ensure sufficient sample sizes within each group, we combined “public suicide” and “hostage suicide” into a single “suicide” category, as these types were rare (8 and 2 observations, respectively). One observation labeled “public suicide (attempted)” was also included under “suicide.” Six observations labeled “targeted and indiscriminate” were grouped under “targeted,” and two labeled “accidental or targeted” were grouped under “accidental”. Missing values were assigned as “unknown”.  We also re-coded "shooter’s relationship to the school community" into broader, interpretable categories. Specifically, we grouped the textual entries into six main categories: “Current Student”, “Former Student”, “Family/Guardian of Student”, “Non-Security Staff”, “Family of Staff”, and “Police/Security”. For example, descriptions such as “student in summer school” and “suspended student” were recoded as “Current Student” and “Former Student,” respectively. All remaining or missing entries were categorized as “Other, Unknown or No Connection”. This standardization resolves inconsistent textual entries, and facilitates simpler comparisons across levels embedded in the categorical variables in subsequent analyses. One observation had shooter 1's gender recorded as “h,” which was presumed to be a data entry error. Since this case did not involve a second shooter and the intended gender could not be inferred from other available information, the observation was excluded from the dataset.
+To address inconsistencies and typos in categorical variables, we cleaned and standardized their string representations. For "shooting type", the original categories included “unclear”, “public suicide”, “hostage suicide”, “accidental” and “targeted.” To simplify analysis and ensure sufficient sample sizes within each group, we combined “public suicide” and “hostage suicide” into a single “suicide” category, as these types were rare (8 and 2 observations, respectively). One observation labeled “public suicide (attempted)” was also included under “suicide.” Six observations labeled “targeted and indiscriminate” were grouped under “targeted,” and two labeled “accidental or targeted” were grouped under “accidental”. Missing values were assigned as “unknown”.  We also re-coded "shooter’s relationship to the school community" into broader, interpretable categories. Specifically, we grouped the textual entries into six main categories: “Current Student”, “Former Student”, “Family/Guardian of Student”, “Non-Security Staff”, “Family of Staff”, and “Police/Security”. For example, descriptions such as “student in summer school” and “suspended student” were recoded as “Current Student” and “Former Student,” respectively. All remaining or missing entries were categorized as “Other, Unknown or No Connection”. This standardization resolves inconsistent textual entries, and facilitates simpler comparisons across levels embedded in the categorical variables in subsequent analyses. 
+
+One observation had shooter 1's gender recorded as “h,” which was presumed to be a data entry error. Since this case did not involve a second shooter and the intended gender could not be inferred from other available information, the observation was excluded from the dataset. Three observations had number of students eligible for free or reduced-price lunch greater than total enrollment, they were removed.
 
 Below is a summary of (non-zero) count and proportion of missing values in our variables of interested after basic cleaning.
 
@@ -131,6 +133,14 @@ kable(data_description, format = "markdown",
 
 In total, the dataset includes 424 shooting incidents. Among them, 328 cases involved no killings, while 99 cases resulted in at least one fatality. This distribution indicates that the majority of school shootings (approximately 77%) did not involve any deaths.
 
+```{r, include = FALSE}
+killing_yes_data = shootings%>%filter(killing_indicator == 1)
+n_yes = nrow(killing_yes_data) # 99
+killing_no_data = shootings%>%filter(killing_indicator == 0)
+n_no = nrow(killing_no_data) # 328
+```
+
+
 ```{r, echo=FALSE}
 num_summary_yes = read_parquet("num_summary_yes.parquet")
 num_summary_no = read_parquet("num_summary_no.parquet")
@@ -139,12 +149,69 @@ kable(num_summary_yes, caption = "Shootings with Killings", format = "markdown",
 kable(num_summary_no, caption = "Shootings without Killings", format = "markdown", digits = 2)
 ```
 
+Tables 3 and 4 show that shootings resulting in a killing were associated with a slightly older average shooter age, while non-fatal shootings occurred more often in schools with higher proportions of non-white students and students receiving subsidized lunch. These patterns suggest that these variables may influence the likelihood of a shooting being fatal. However, the substantial standard deviations for all variables indicate considerable heterogeneity within each group, highlighting that these factors alone do not fully explain shooting outcomes. This heterogeneity should be kept in mind when interpreting the model results. Additional visualizations are provided in the Appendix.
+
+```{r, echo=FALSE,fig.width=6, fig.height=3.25, fig.align='center'}
+# Shooting Type
+# Summarize percentages for each categories
+shooting_type_yes <- killing_yes_data %>%
+  group_by(shooting_type) %>%
+  summarise(shooting_type_percent = round(n()/n_yes*100, 2)) %>%
+  mutate("Killing Occured" = "Yes") %>%
+  bind_rows(tibble(
+    shooting_type = c("Suicide"),
+    shooting_type_percent = 0,
+    `Killing Occured` = "Yes"
+  ))
+
+shooting_type_no <- killing_no_data %>%
+  group_by(shooting_type) %>%
+  summarise(shooting_type_percent = round(n() / n_no * 100, 2), .groups = "drop") %>%
+  mutate(`Killing Occured` = "No")
+
+shooting_type_combined_data <- bind_rows(shooting_type_yes, shooting_type_no)
+
+# Barplot
+ggplot(shooting_type_combined_data, aes(x = shooting_type, y = shooting_type_percent, fill = `Killing Occured`)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = shooting_type_percent), position = position_dodge(width = 0.9), vjust = -0.5, size = 2.5) +
+  labs(
+    title = "Percentage of Shooting cases by Shooting type\n(Killing occured vs. did not occured)",
+    x = "Shooting type",
+    y = "Percentage (%)"
+  ) +
+  scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
+  theme_minimal()+ 
+  theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 10, face = "bold"),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+```
+
+*Figure 1: Percentage of Shooting cases by Shooting type (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on their incoming GPA, categorized into five groups: accidental, indiscriminate, suicide, targeted and unclear. Each bar is labeled with both the corresponding percentage and the total counts in brackets within each category.*
+
+Figure 1 suggests that targeted shootings were the most common shooting type and were substantially more prevalent when killings occurred (65.3% in killing occurred shootings vs. 49.1% in no killing shootings), suggesting a strong association between targeted intent shootings and fatal outcomes. In contrast, accidental and unclear shootings were more frequent in non-fatal incidents, while indiscriminate shootings showed a moderate increase when killings occurred (19.4% vs. 11.4%). These patterns indicate that the nature of the shooting event may play a critical role in determining whether killing would occur. Hence, shooting type should be deemed as a key predictor in the model to examine its contribution to the likelihood of a killing.
+
+
+
+
+# 3. Model
+
+
 # 5. Conclusion
 These incidents may be less predictable because they occur outside existing social or disciplinary networks — schools can’t rely on familiar early-warning signs like student behavioral issues, conflict reports, or peer concerns.
 Such shooters may enter the school with higher intent or preparation, possibly bringing more lethal weapons or planning attacks more deliberately.Because they are external actors, existing school-based prevention systems (focused on students and staff) may be less effective in identifying or deterring them beforehand.
 schools canit easily prevent these attacks directly — but it highlights a different area of vulnerability and thus a different kind of prevention need:It suggests that school safety cannot rely solely on internal behavioral monitoring (e.g., identifying at-risk students).
 There is a need for stronger external security coordination — for instance, improving access control, visitor screening, and information sharing between schools, law enforcement, and community organizations.
 It also underscores the importance of rapid emergency response and preparedness training, since these events tend to be sudden and high-lethality when they occur.
+
+# 6. Limitation
+
+numerical variables high sd:
+For modeling, this may imply that including these variables may help capture important trends, but the model should also account for variability within groups, possibly through interaction terms or more flexible modeling approaches. 
+
 
 # Appendix
 
