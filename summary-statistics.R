@@ -191,8 +191,14 @@ shooting_type_yes <- killing_yes_data %>%
 
 shooting_type_no <- killing_no_data %>%
   group_by(shooting_type) %>%
-  summarise(shooting_type_percent = round(n()/n_no*100, 2)) %>%
-  mutate("Killing Occured" = "No")
+  summarise(shooting_type_percent = round(n() / n_no * 100, 2), .groups = "drop") %>%
+  mutate(`Killing Occured` = "No") %>%
+  # Add the new categories
+  bind_rows(tibble(
+    shooting_type = c("Hostage Suicide", "Public Suicide"),
+    shooting_type_percent = 0,
+    `Killing Occured` = "No"
+  ))
 
 shooting_type_combined_data <- bind_rows(shooting_type_yes, shooting_type_no)
 
@@ -235,6 +241,38 @@ ggplot(school_type_combined_data, aes(x = school_type, y = school_type_percent, 
   labs(
     title = "Percentage of Shooting cases by School type (Killing occured vs. did not occured)",
     x = "School type",
+    y = "Percentage(%)"
+  ) +
+  scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
+  theme_minimal()+ 
+  theme(axis.text.x = element_text(size = 10),
+        axis.title.x =element_text(size = 12),
+        axis.title.y =element_text(size = 12),
+        plot.title = element_text(size = 16),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12))
+
+# Shooter gender
+# Summarize percentages for each categories
+gender_yes <- killing_yes_data %>%
+  group_by(gender_shooter1) %>%
+  summarise(gender_percent = round(n()/n_yes*100, 2)) %>%
+  mutate("Killing Occured" = "Yes")
+
+gender_no <- killing_no_data %>%
+  group_by(gender_shooter1) %>%
+  summarise(gender_percent = round(n()/n_no*100, 2)) %>%
+  mutate("Killing Occured" = "No")
+
+gender_combined_data <- bind_rows(gender_yes, gender_no)
+
+# Barplot
+ggplot(gender_combined_data, aes(x = gender_shooter1, y = gender_percent, fill = `Killing Occured`)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = gender_percent), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) +
+  labs(
+    title = "Percentage of Shooting cases by Shooter Gender (Killing occured vs. did not occured)",
+    x = "Shooter Gender",
     y = "Percentage(%)"
   ) +
   scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
