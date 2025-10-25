@@ -19,9 +19,9 @@ ncol(shootings)
 # 3. Subset data by killing indicator
 # -----------------------------------------------------------
 killing_yes_data = shootings%>%filter(killing_indicator == 0)
-n_yes = nrow(killing_yes_data) # 246
+n_yes = nrow(killing_yes_data) # 328
 killing_no_data = shootings%>%filter(killing_indicator == 1)
-n_no = nrow(killing_no_data) # 85
+n_no = nrow(killing_no_data) # 99
 
 
 # -----------------------------------------------------------
