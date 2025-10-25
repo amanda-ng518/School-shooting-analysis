@@ -71,7 +71,7 @@ data <- data %>%
 unique(data$shooter_relationship1)
 
 # Gender
-data <- data %>% filter(gender_shooter1 != "h") #typo
+data <- data %>% filter(gender_shooter1 == "m"|gender_shooter1 == "f"| is.na(gender_shooter1)) # exclude single observation with "h"
 
 # Rename categorical variables value
 
