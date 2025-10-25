@@ -5,7 +5,6 @@ library(tidyr)
 library(dplyr)
 library(arrow)
 library(knitr)
-library(stringr)
 library(ggplot2)
 
 # -----------------------------------------------------------
