@@ -110,7 +110,7 @@ new_names <- c(
   gender_shooter2 = "Gender of shooter 2",
   enrollment = "Number of student enrollment",
   white = "Number of white students",
-  lunch = "Number of students eligible for free/reduced Lunch",
+  lunch = "Number of students eligible for free/reduced-price lunch",
   resource_officer = "Resource officer present",
   weapon = "Weapon used",
   weapon_source = "Weapon source",
