@@ -1,0 +1,7 @@
+---
+title: "Fatal US School Shootings Are More Likely in Targeted and Multi-Victim Events: Evidence from Logistic Regression on Contextual Factors"
+author: "Amanda Ng"
+date: "2025-10-25"
+output: pdf_document
+---
+
