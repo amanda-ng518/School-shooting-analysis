@@ -34,7 +34,7 @@ data <- data %>%
 unique(data$shooting_type)
 obs1 = data%>%filter(shooting_type == "suicide") # only one observation with 0 killed
 obs2 = data%>%filter(shooting_type == "accidental or targeted") # 2 observations
-obs3 = data%>%filter(shooting_type == "targeted and indiscriminate") # 6 observations, keep this category
+obs3 = data%>%filter(shooting_type == "targeted and indiscriminate") # 6 observations
 
 data <- data %>%
   mutate(
@@ -43,6 +43,7 @@ data <- data %>%
       str_to_lower() %>%                          # make lowercase
       str_replace_all("uclear", "unclear") %>%    # fix typo
       str_replace_all("public suicide \\(attempted\\)", "public suicide") %>%
+      str_replace_all("targeted and indiscriminate", "targeted") %>%
       str_replace_all("^suicide$", "public suicide"),              # exact match only
     shooting_type = if_else(is.na(shooting_type), "Unclear", shooting_type), 
     shooting_type = str_to_title(shooting_type)   # pretty capitalization
