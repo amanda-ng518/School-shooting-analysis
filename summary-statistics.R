@@ -193,7 +193,7 @@ shooting_type_no <- killing_no_data %>%
   group_by(shooting_type) %>%
   summarise(shooting_type_percent = round(n() / n_no * 100, 2), .groups = "drop") %>%
   mutate(`Killing Occured` = "No") %>%
-  # Add the new categories
+  # Add the missing categories and set 0
   bind_rows(tibble(
     shooting_type = c("Hostage Suicide", "Public Suicide"),
     shooting_type_percent = 0,
@@ -284,3 +284,78 @@ ggplot(gender_combined_data, aes(x = gender_shooter1, y = gender_percent, fill =
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 12))
 
+# shooter_relationship1
+# Summarize percentages for each categories
+shooter_relationship_yes <- killing_yes_data %>%
+  group_by(shooter_relationship1) %>%
+  summarise(shooter_relationship_percent = round(n()/n_yes*100, 2)) %>%
+  mutate("Killing Occured" = "Yes")
+
+shooter_relationship_no <- killing_no_data %>%
+  group_by(shooter_relationship1) %>%
+  summarise(shooter_relationship_percent = round(n() / n_no * 100, 2), .groups = "drop") %>%
+  mutate(`Killing Occured` = "No")%>%
+  # Add the missing categories and set 0
+  bind_rows(tibble(
+    shooter_relationship1 = c("Other"),
+    shooter_relationship_percent = 0,
+    `Killing Occured` = "No"
+  ))
+
+shooter_relationship_combined_data <- bind_rows(shooter_relationship_yes, shooter_relationship_no)
+
+# Barplot
+ggplot(shooter_relationship_combined_data, aes(x = shooter_relationship1, y = shooter_relationship_percent, fill = `Killing Occured`)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = shooter_relationship_percent), position = position_dodge(width = 0.9), vjust = -0.5, size = 2) +
+  labs(
+    title = "Percentage of Shooting cases by Shooter Relationship (Killing occured vs. did not occured)",
+    x = "Shooter Relationship",
+    y = "Percentage (%)"
+  ) +
+  scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
+  theme_minimal()+ 
+  theme(axis.text.x = element_text(size = 8,angle = 45, hjust = 1),
+        axis.title.x =element_text(size = 12),
+        axis.title.y =element_text(size = 12),
+        plot.title = element_text(size = 16),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12))
+
+# injured_indicator
+# Summarize percentages for each categories
+injured_yes <- killing_yes_data %>%
+  group_by(injured_indicator) %>%
+  summarise(injured_percent = round(n()/n_yes*100, 2)) %>%
+  mutate("Killing Occured" = "Yes")
+
+injured_no <- killing_no_data %>%
+  group_by(injured_indicator) %>%
+  summarise(injured_percent = round(n()/n_no*100, 2)) %>%
+  mutate("Killing Occured" = "No")
+
+injured_combined_data <- bind_rows(injured_yes, injured_no)
+
+injured_combined_data <- injured_combined_data %>%
+  mutate(injured_indicator = factor(injured_indicator,
+                                    levels = c(0, 1),
+                                    labels = c("No injured", "At least one injured")))
+
+
+# Barplot
+ggplot(injured_combined_data, aes(x = injured_indicator, y = injured_percent, fill = `Killing Occured`)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = injured_percent), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) +
+  labs(
+    title = "Percentage of Shooting cases by Injured Indicator (Killing occured vs. did not occured)",
+    x = "Injured Indicator",
+    y = "Percentage(%)"
+  ) +
+  scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
+  theme_minimal()+ 
+  theme(axis.text.x = element_text(size = 10),
+        axis.title.x =element_text(size = 12),
+        axis.title.y =element_text(size = 12),
+        plot.title = element_text(size = 16),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12))
