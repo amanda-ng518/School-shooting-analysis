@@ -83,7 +83,7 @@ perf_data <- sapply(thresholds, function(t) {
   pred <- ifelse(pred_probs > t, 1, 0)
   cm <- table(factor(pred, levels = 0:1), factor(test_data$killing_indicator, levels = 0:1))
   TP <- cm["1","1"]; TN <- cm["0","0"]; FP <- cm["1","0"]; FN <- cm["0","1"]
-  c(Sensitivity = TP/(TP+FN), Specificity = TN/(TN+FP), misclassification = (FP+FN)/sum(cm))
+  c(Sensitivity = TP/(TP+FN), Specificity = TN/(TN+FP), Misclassification = (FP+FN)/sum(cm))
 })
 
 perf_data <- as.data.frame(t(perf_data))
