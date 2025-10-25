@@ -32,9 +32,11 @@ data <- data %>%
 
 # Shooting type
 unique(data$shooting_type)
-obs1 = data%>%filter(shooting_type == "suicide") # only one observation with 0 killed
-obs2 = data%>%filter(shooting_type == "accidental or targeted") # 2 observations
-obs3 = data%>%filter(shooting_type == "targeted and indiscriminate") # 6 observations
+nrow(data%>%filter(shooting_type == "suicide")) # single obs with 0 killed
+nrow(data%>%filter(shooting_type == "accidental or targeted")) # 2 
+nrow(data%>%filter(shooting_type == "targeted and indiscriminate")) # 6 
+nrow(data%>%filter(shooting_type == "hostage suicide")) # 2
+nrow(data%>%filter(shooting_type == "public suicide")) # 8
 
 data <- data %>%
   mutate(
@@ -42,10 +44,12 @@ data <- data %>%
       str_trim() %>%                              # remove leading/trailing spaces
       str_to_lower() %>%                          # make lowercase
       str_replace_all("uclear", "unclear") %>%    # fix typo
-      str_replace_all("public suicide \\(attempted\\)", "public suicide") %>%
+      str_replace_all("public suicide \\(attempted\\)", "suicide") %>%
       str_replace_all("targeted and indiscriminate", "targeted") %>%
-      str_replace_all("^suicide$", "public suicide"),              # exact match only
-    shooting_type = if_else(is.na(shooting_type), "Unclear", shooting_type), 
+      str_replace_all("public suicide", "suicide") %>%
+      str_replace_all("accidental or targeted", "accidental") %>%
+      str_replace_all("hostage suicide", "suicide"),              
+    shooting_type = if_else(is.na(shooting_type), "unclear", shooting_type), 
     shooting_type = str_to_title(shooting_type)   # pretty capitalization
   )
 
