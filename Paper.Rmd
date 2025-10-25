@@ -41,3 +41,13 @@ the models, are also discussed. Finally, Section 5: Conclusion summarizes the ke
 next steps for future studies. Supporting information, including model assumptions and checks, is provided
 in the Section 6: Appendix.
 
+# 2. Data
+
+## 2.1 Data source
+
+## 2.2 Data description
+
+## 2.3 Data cleaning
+
+## 2.4 Data summary and visualizations
+
