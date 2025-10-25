@@ -88,6 +88,9 @@ data$lunch <- as.integer(gsub(",", "", data$lunch))
 data$enrollment <- as.integer(gsub(",", "", data$enrollment))
 data$white <- as.integer(gsub(",", "", data$white))
 
+# Lunch
+data <- data %>% filter(lunch <= enrollment| is.na(lunch)) # exclude 3 obs with lunch>enrollment
+
 #--------------Missing values------------------#
 # Examine relevant variables
 # Exclude id, geographical and temporal variables

@@ -74,11 +74,11 @@ R version and packages (citation)
 
 ```{r,include=FALSE}
 # Compute raw data dimensions
-nrow(shootings) # Total = 427
+nrow(shootings) # Total = 424
 ncol(shootings) # Total = 9
 ```
 
-The cleaned data consists of 427 observations and 9 variables. Below is a summary description of all variables in the cleeaned dataset.
+The cleaned data consists of 424 observations and 9 variables. Below is a summary description of all variables in the cleaned dataset.
 
 ```{r, echo=FALSE}
 # Create a data frame
@@ -91,8 +91,8 @@ data_description <- data.frame(
     "Shooter Age",
     "Shooter Gender",
     "Shooter Relationship",
-    "Non-white Proportion",
-    "Lunch Proportion"
+    "Proportion of Non-white Studens",
+    "Proportion of Students Eligible for Subsizied Lunch"
   ),
   Type  = c(
     "Binary",
@@ -119,13 +119,25 @@ data_description <- data.frame(
 )
 
 # Print the table using kable
-kable(data_description, format = "markdown", col.names = c("Variable", "Type", "Categories/Range"))
+kable(data_description, format = "markdown", 
+      align = c("l", "l", "r"),
+      col.names = c("Variable", "Type", "Categories/Range"),
+      caption = "Summary Description of Variables")
 
 ```
 
 
 ## 2.5 Data summary and visualizations
 
+In total, the dataset includes 424 shooting incidents. Among them, 328 cases involved no killings, while 99 cases resulted in at least one fatality. This distribution indicates that the majority of school shootings (approximately 77%) did not involve any deaths.
+
+```{r, echo=FALSE}
+num_summary_yes = read_parquet("num_summary_yes.parquet")
+num_summary_no = read_parquet("num_summary_no.parquet")
+
+kable(num_summary_yes, caption = "Shootings with Killings", format = "markdown", digits = 2)
+kable(num_summary_no, caption = "Shootings without Killings", format = "markdown", digits = 2)
+```
 
 # 5. Conclusion
 These incidents may be less predictable because they occur outside existing social or disciplinary networks — schools can’t rely on familiar early-warning signs like student behavioral issues, conflict reports, or peer concerns.

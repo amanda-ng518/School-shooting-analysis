@@ -51,9 +51,9 @@ make_summary <- function(df) {
 
 table_names <- c(
   "Measure" = "Measure",
-  "Shooter age" = "age_shooter1",
+  "Shooter Age" = "age_shooter1",
   "Proportion of Non-white Students" = "non_white_prop",
-  "Proportion of Lunch" = "lunch_prop"
+  "Proportion of Students with Subsidized Lunch" = "lunch_prop"
 )
 
 num_summary_yes <- make_summary(filter(shootings, killing_indicator == 1)) %>% 
@@ -63,6 +63,9 @@ num_summary_no <- make_summary(filter(shootings, killing_indicator == 0)) %>%
 
 kable(num_summary_yes, caption = "Shootings with Killings", digits = 2)
 kable(num_summary_no, caption = "Shootings without Killings", digits = 2)
+
+write_parquet(num_summary_yes, "num_summary_yes.parquet")
+write_parquet(num_summary_no, "num_summary_no.parquet")
 
 # Shooter age
 ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
