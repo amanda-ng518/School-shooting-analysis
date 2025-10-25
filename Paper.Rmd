@@ -17,3 +17,27 @@ library(broom)
 library(pROC)
 ```
 
+# Abstract
+
+# 1. Introduction
+
+Gun violence in schools remains one of the most distressing manifestations of firearm-related harm in the United States (citation). Beyond the immediate tragedy of each event, school shootings provoke profound societal fear and raise urgent questions about what factors make certain incidents more deadly than others. Despite widespread public concern, empirical understanding of the contextual conditions that shape the fatality of school shootings remains limited. A clearer grasp of these determinants is essential for evidence-based prevention and policy development.
+
+Previous research has predominantly examined psychological profiles of perpetrators, firearm access, or broader sociocultural contributors to violence (citation). Far fewer studies have focused on the context-level characteristics of school shootings — that is, features of the event and school environment that may influence whether a shooting results in fatalities. Identifying such contextual predictors is critical, as it allows researchers and policymakers to target interventions toward the conditions under which violence is most likely to turn deadly.
+
+This study addresses this gap by modeling the likelihood of a fatal outcome in recorded school shootings as a function of multiple contextual variables. Using logistic regression, we analyzed whether the probability of at least one fatality was associated with the presence of injuries, the shooting type, the shooter’s demographic and relational characteristics, and school-level socioeconomic and demographic factors.
+
+Results show that incidents involving at least one injury and targeted shootings were significantly more likely to result in fatalities. These findings underscore that fatal school shootings are not random events but are shaped by identifiable situational and contextual factors. Understanding these patterns provides a foundation for more effective risk assessment, prevention strategies, and resource allocation in efforts to protect students and school communities.
+
+Section 2: Data describes the data source, alongside the cleaning and 
+preparation of the data set for analysis. A summary of key variables and exploratory data 
+visualizations is also presented. Section 3: Modelling explains the modeling approach, 
+logistic regression model, used to analyze the relationship between the likelihood of fatality and 
+shooting events' contextual characteristics, along with justifications of 
+appropriateness of the model design. Section 4: Results & Discussion presents 
+the results and interprets the significance of the predictors considered on dropout risk. 
+Limitations of the study, including data quality and practical usability of
+the models, are also discussed. Finally, Section 5: Conclusion summarizes the key insights and outlines the
+next steps for future studies. Supporting information, including model assumptions and checks, is provided
+in the Section 6: Appendix.
+
