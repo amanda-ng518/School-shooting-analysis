@@ -48,7 +48,7 @@ abline(h = 0, col = "red")
 # 4.5 No Overdispersion
 # Pearson chi-squared statistics
 sum(residuals(model, type = "pearson")^2)/df.residual(model) 
-# 0.9804669, close to 1, pass
+# 1.012099, close to 1, pass
 
 # -----------------------------------------------------------
 # 5. Model Estimates and Hypothesis test
@@ -66,7 +66,7 @@ summaryOR = tidy(model, exponentiate = TRUE, conf.int = TRUE) %>%
 
 # LRT
 null_model <- glm(killing_indicator ~ 1, family = binomial, data = train_data)
-anova(null_model, model, test = "Chisq") # 0.00061, significant
+anova(null_model, model, test = "Chisq") # 3.355e-05, significant
 
 # -----------------------------------------------------------
 # 6. Model diagnostics
@@ -74,7 +74,7 @@ anova(null_model, model, test = "Chisq") # 0.00061, significant
 # AUC
 pred_probs <- predict(model, newdata = test_data,type = "response")
 roc_obj <- roc(test_data$killing_indicator, pred_probs)
-plot(roc_obj, col = "blue", print.auc = TRUE) # 0.757
+plot(roc_obj, col = "blue", print.auc = TRUE) # 0.660
 
 # Sensitivity, Specificity, and Misclassification rates 
 thresholds <- seq(0, 1, 0.01)
