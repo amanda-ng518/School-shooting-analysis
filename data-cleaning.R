@@ -99,12 +99,43 @@ interested_var = data %>%
          resource_officer, weapon, weapon_source,state,
          shooter_relationship1, shooter_relationship2)
 
-missing_table <- data.frame(
-  Missing_Count = colSums(is.na(interested_var)),
-  `Missing_Proportion` = round(colSums(is.na(interested_var)) / nrow(interested_var)*100,2)
+new_names <- c(
+  killed = "Number of killed (excluding shooter)",
+  injured = "Number of injured (excluding shooter)",
+  school_type = "School type",
+  shooting_type = "Shooting type",
+  age_shooter1 = "Age of shooter 1",
+  gender_shooter1 = "Gender of shooter 1",
+  age_shooter2 = "Age of shooter 2",
+  gender_shooter2 = "Gender of shooter 2",
+  enrollment = "Number of student enrollment",
+  white = "Number of white students",
+  lunch = "Number of students eligible for free/reduced Lunch",
+  resource_officer = "Resource officer present",
+  weapon = "Weapon used",
+  weapon_source = "Weapon source",
+  state = "State",
+  shooter_relationship1 = "Shooter 1 relationship with school community",
+  shooter_relationship2 = "Shooter 2 relationship with school community"
 )
-missing_table <- subset(missing_table, Missing_Proportion > 0)
-kable(missing_table, caption = "Proportion of missing values in each variable")
+
+missing_table <- data.frame(
+  Variable = names(interested_var),  
+  "Count" = colSums(is.na(interested_var)),
+  "Proportion" = round(colSums(is.na(interested_var)) / nrow(interested_var)*100,2),
+  row.names = NULL
+)
+
+# Replace variable names in the table
+missing_table$Variable <- new_names[missing_table$Variable]
+
+missing_table <- subset(missing_table, Count > 0)
+
+write_parquet(missing_table, "missing_table.parquet")
+
+kable(missing_table, col.names = c("Variable", "Missing Count", "Missing Proportion (%)"), 
+      align = c("l", "r", "r"),
+      caption = "Count and Proportion of Missing Values in Interested Variables")
 
 # Only 3% observations have a second shooter
 # Almost 45% observations have a missing resource_officer information -> hard to impute
