@@ -68,12 +68,24 @@ unique(data$shooter_relationship1)
 
 # Gender
 data <- data %>% filter(gender_shooter1 != "h") #typo
-         
+
+# Rename categorical variables value
+
+data <- data%>%mutate(
+  gender_shooter1 = case_when(gender_shooter1 == "m" ~ "Male",
+                              gender_shooter1 == "f" ~ "Female"),
+  school_type = case_when(school_type == "public" ~ "Public",
+                          school_type == "private" ~ "Private")
+)
+
+
 # Transform back to integer representation
 data$lunch <- as.integer(gsub(",", "", data$lunch))
 data$enrollment <- as.integer(gsub(",", "", data$enrollment))
 data$white <- as.integer(gsub(",", "", data$white))
-#--------------Keep relevant variables-------------------#
+
+#--------------Missing values------------------#
+# Examine relevant variables
 # Exclude id, geographical and temporal variables
 # Exclude low grade, high grade of the school offers, staffing 
 interested_var = data %>%
@@ -83,7 +95,6 @@ interested_var = data %>%
          resource_officer, weapon, weapon_source,state,
          shooter_relationship1, shooter_relationship2)
 
-#--------------Missing values------------------#
 missing_table <- data.frame(
   Missing_Count = colSums(is.na(interested_var)),
   `Missing_Proportion` = round(colSums(is.na(interested_var)) / nrow(interested_var)*100,2)
@@ -121,10 +132,10 @@ data <- data %>%
 # Compute state-level male proportion
 state_prop <- data %>%
   group_by(state) %>%
-  summarise(state_prop_m = mean(gender_shooter1 == "m", na.rm = TRUE), .groups = "drop")
+  summarise(state_prop_m = mean(gender_shooter1 == "Male", na.rm = TRUE), .groups = "drop")
 
 # Compute overall proportion as fallback
-overall_prop_m <- mean(data$gender_shooter1 == "m", na.rm = TRUE)
+overall_prop_m <- mean(data$gender_shooter1 == "Male", na.rm = TRUE)
 
 # Join state proportions
 data <- data %>%
@@ -134,7 +145,7 @@ data <- data %>%
     gender_shooter1 = if_else(
       is.na(gender_shooter1),
       {prob_m <- ifelse(is.na(state_prop_m), overall_prop_m, state_prop_m)
-        sample(c("m", "f"), size = 1, replace = TRUE, prob = c(prob_m, 1 - prob_m))
+        sample(c("Male", "Female"), size = 1, replace = TRUE, prob = c(prob_m, 1 - prob_m))
       },
       gender_shooter1
     )
@@ -154,8 +165,8 @@ data <- data %>%
   mutate(mean_lunch_prop_overall = mean(lunch_prop, na.rm = TRUE)) %>%
   mutate(
     lunch = case_when(
-      school_type == "private" ~ 0,
-      school_type == "public"~ coalesce(lunch, round(mean_lunch_prop_state * enrollment), round(mean_lunch_prop_overall * enrollment) )
+      school_type == "Private" ~ 0,
+      school_type == "Public"~ coalesce(lunch, round(mean_lunch_prop_state * enrollment), round(mean_lunch_prop_overall * enrollment) )
     )
   ) %>%
   select(-lunch_prop, -mean_lunch_prop_state)
@@ -191,7 +202,7 @@ data <- data %>%mutate(
     non_white_prop = 1 - white / enrollment
   )
 
-# Dataset for analysis
+#------------Dataset for analysis-----------#
 shootings <- data%>%select(killing_indicator, injured_indicator, school_type, shooting_type, 
                            age_shooter1,gender_shooter1, shooter_relationship1,
                            non_white_prop, lunch_prop)
