@@ -17,7 +17,7 @@ shootings = read_parquet("shootings_cleaned.parquet")
 # 3. Separate train and test datasets
 # -----------------------------------------------------------
 set.seed(123)  
-index <- sample(1:nrow(shootings), size = 0.7 * nrow(shootings))  # 85% train, 15% test
+index <- sample(1:nrow(shootings), size = 0.85 * nrow(shootings))  # 85% train, 15% test
 train_data <- shootings[index, ]
 test_data <- shootings[-index, ]
 

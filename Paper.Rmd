@@ -5,3 +5,15 @@ date: "2025-10-25"
 output: pdf_document
 ---
 
+```{r}
+# Load packages
+library(tidyr)
+library(dplyr)
+library(arrow)
+library(knitr)
+library(ggplot2)
+library(car)      
+library(broom)
+library(pROC)
+```
+
