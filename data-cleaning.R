@@ -65,9 +65,8 @@ data <- data %>%
     str_detect(shooter_relationship1, regex("teacher|janitor|staff|employee|substitute", ignore_case = TRUE)) ~ "Non-Security Staff",
     str_detect(shooter_relationship1, regex("spouse|husband|ex-husband", ignore_case = TRUE)) ~ "Family of Staff",
     str_detect(shooter_relationship1, regex("police|sheriff|SWAT|resource officer|security", ignore_case = TRUE)) ~ "Police/Security",
-    str_detect(shooter_relationship1, regex("no connection|none", ignore_case = TRUE)) ~ "No Connection",
     is.na(shooter_relationship1) ~ "Unknown",
-    TRUE ~ "Other"
+    TRUE ~ "Other or No Connection"
   ))
 unique(data$shooter_relationship1)
 
