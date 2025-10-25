@@ -194,7 +194,7 @@ shooting_type_no <- killing_no_data %>%
   mutate(`Killing Occured` = "No") %>%
   # Add the missing categories and set 0
   bind_rows(tibble(
-    shooting_type = c("Hostage Suicide", "Public Suicide"),
+    shooting_type = c("Suicide"),
     shooting_type_percent = 0,
     `Killing Occured` = "No"
   ))
@@ -293,13 +293,7 @@ shooter_relationship_yes <- killing_yes_data %>%
 shooter_relationship_no <- killing_no_data %>%
   group_by(shooter_relationship1) %>%
   summarise(shooter_relationship_percent = round(n() / n_no * 100, 2), .groups = "drop") %>%
-  mutate(`Killing Occured` = "No")%>%
-  # Add the missing categories and set 0
-  bind_rows(tibble(
-    shooter_relationship1 = c("Other"),
-    shooter_relationship_percent = 0,
-    `Killing Occured` = "No"
-  ))
+  mutate(`Killing Occured` = "No")
 
 shooter_relationship_combined_data <- bind_rows(shooter_relationship_yes, shooter_relationship_no)
 
@@ -358,3 +352,4 @@ ggplot(injured_combined_data, aes(x = injured_indicator, y = injured_percent, fi
         plot.title = element_text(size = 16),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 12))
+
