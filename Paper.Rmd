@@ -45,25 +45,11 @@ The study draws on The Washington Post School Shootings Database (citation), a s
 
 ## 2.2 Data overview
 
-The raw data consists of 428 recorded school shooting incidents in the United States, spanning the period from April 20, 1999 onward. Each observation represents a distinct shooting incident, and the dataset contains 50 variables. These variables include temporal and geographical information about the shooting incident, shooter(s) demographic characteristics, shooter(s) relationship to school community, shooting type, shooting outcomes, weapon used and source, school type, number of students at school(total enrollment and by racial groups), number of students at school eligible to receive a free or reduced-price lunch, presence of a school resource office, and grade-levels offered by school. The dataset records a maximum of two shooters per incident. Every incident has at least one shooter, and details for a second shooter are included only if applicable. The full list of variables can be found in the Appendix. In this study, we are interested in the following variables:
+The raw data consists of 428 recorded school shooting incidents in the United States, spanning the period from April 20, 1999 onward. Each observation represents a distinct shooting incident, and the dataset contains 50 variables. These variables include temporal and geographical information about the shooting incident, shooter(s) demographic characteristics, shooter(s) relationship to school community, shooting type, shooting outcomes, weapon used and source, school type, number of students at school(total enrollment and by racial groups), number of students at school eligible to receive a free or reduced-price lunch, presence of a school resource office, and grade-levels offered by school. The dataset records a maximum of two shooters per incident. Every incident has at least one shooter, and details for a second shooter are included only if applicable. The full list of variables can be found in the Appendix. 
 
-- Number of killed (excluding shooter)
-- Number of injured (excluding shooter)
-- School type
-- Age of shooter(s)
-- Gender of shooter(s)
-- Shooter(s) relationship with school community 
-- Total enrolment
-- Number of white students  
-- Number of students eligible for free/reduced-price lunch
-- Resource officer present 
-- Weapon used      
-- Weapon source         
+## 2.3 Data cleaning
 
-## 2.21 Data cleaning
-
-To address inconsistencies and typos in categorical variables, we cleaned and standardized their string representations. For "shooting type", the original categories included “unclear”, “public suicide”, “hostage suicide”, “accidental” and “targeted.” To simplify analysis and ensure sufficient sample sizes within each group, we combined “public suicide” and “hostage suicide” into a single “suicide” category, as these types were rare (8 and 2 observations, respectively). One observation labeled “public suicide (attempted)” was also included under “suicide.” Six observations labeled “targeted and indiscriminate” were grouped under “targeted,” and two labeled “accidental or targeted” were grouped under “accidental”. Missing values were assigned as “unknown”.  We also re-coded "shooter’s relationship to the school community" into broader, interpretable categories. Specifically, we grouped the textual entries into six main categories: “Current Student”, “Former Student”, “Family/Guardian of Student”, “Non-Security Staff”, “Family of Staff”, and “Police/Security”. For example, descriptions such as “student in summer school” and “suspended student” were recoded as “Current Student” and “Former Student,” respectively. All remaining or missing entries were categorized as “Other, Unknown or No Connection”. This standardization resolves inconsistent textual entries, and facilitates simplier comparisons across relationship types in subsequent analyses. One observation had the first shooter’s gender recorded as “h,” which was presumed to be a data entry error. Since this case did not involve a second shooter and the intended gender could not be inferred from other available information, the observation was excluded from the dataset.
-
+To address inconsistencies and typos in categorical variables, we cleaned and standardized their string representations. For "shooting type", the original categories included “unclear”, “public suicide”, “hostage suicide”, “accidental” and “targeted.” To simplify analysis and ensure sufficient sample sizes within each group, we combined “public suicide” and “hostage suicide” into a single “suicide” category, as these types were rare (8 and 2 observations, respectively). One observation labeled “public suicide (attempted)” was also included under “suicide.” Six observations labeled “targeted and indiscriminate” were grouped under “targeted,” and two labeled “accidental or targeted” were grouped under “accidental”. Missing values were assigned as “unknown”.  We also re-coded "shooter’s relationship to the school community" into broader, interpretable categories. Specifically, we grouped the textual entries into six main categories: “Current Student”, “Former Student”, “Family/Guardian of Student”, “Non-Security Staff”, “Family of Staff”, and “Police/Security”. For example, descriptions such as “student in summer school” and “suspended student” were recoded as “Current Student” and “Former Student,” respectively. All remaining or missing entries were categorized as “Other, Unknown or No Connection”. This standardization resolves inconsistent textual entries, and facilitates simpler comparisons across levels embedded in the categorical variables in subsequent analyses. One observation had shooter 1's gender recorded as “h,” which was presumed to be a data entry error. Since this case did not involve a second shooter and the intended gender could not be inferred from other available information, the observation was excluded from the dataset.
 
 Below is a summary of (non-zero) count and proportion of missing values in our variables of interested after basic cleaning.
 
@@ -77,23 +63,14 @@ kable(missing_table, col.names = c("Variable", "Missing Count", "Missing Proport
 
 According to Table 1, more than 97% of incidents did not involve a second shooter, indicating that the vast majority of incidents are perpetrated by a single individual. Variables "presence of a resource officer", "weapon used", and "source of the weapon" contains missing values for over 40% of the observations. The high proportion of missing values, combined with the specificity uncoded in weapon-related variables, makes reliable imputation impractical. Therefore, in the following analysis, we exclude all information related to a second shooter, as well as presence of a resource officer and weapons.
 
+To handle missing values, we applied context-specific imputation strategies for the remaining key variables. For shooter 1's age, missing values were imputed by the mean age within the same shooting type and state, with state- or overall means used as fallbacks. Shooter 1's gender was imputed probabilistically based on the observed state-level gender proportions, preserving underlying shooter gender distribution in the data. No fallback is needed here since male shooter proportions are available in all states. For the number of students eligible for free or reduced-price lunch, we first set all private schools to zero, as such programs typically apply only to public schools. For public schools, missing values were imputed using the average lunch proportion within each state, with the overall proportion used as a fallback. The imputed value was then scaled by the school’s total enrollment. Finally, missing counts of white students were imputed using the mean proportion of white students within each combination of shooting type, state, and school type and multiplied by school's total enrollment. Mean at state–school type level, and school type mean were used as fallbacks.
 
-
-
-
-
-
-
-
-
-We collapsed the number of killings and injuries variables into binary indicators. For observations with number of killed or injured greater than zero, the corresponding indicator was coded as “1”; otherwise, it was coded as “0”. This is appropriate because our study focuses on the presence or absence of harm in each incident, rather than the exact number. This approach hence simplifies the analysis, and facilitates clear interpretation of the relationships between incident characteristics and the occurrence of harm.
-
-Additionally, we created two standardized variables to capture key aspects of students' socioeconomic and racial composition in each school. The racial composition was measured as the proportion of non-white students calculated as $1 - \frac{\text{Number of white students}}{\text{Total enrollment}}$, and the economic situation was measured as the proportion of students receiving subsidized meals calculated as $\frac{\text{Number of students eligible for free or reduced lunch}}{\text{Total enrollment}}$. Standardizing both measures by total enrollment allows for meaningful comparisons across schools of different sizes and ensures that these variables reflect relative composition rather than absolute counts.
+We collapsed the number of killings and injuries variables into binary indicators. For observations with number of killed or injured greater than zero, the corresponding indicator was coded as “1”; otherwise, it was coded as “0”. This is appropriate because our study focuses on the presence or absence of harm in each incident, rather than the exact number. This approach hence simplifies the analysis, and facilitates clear interpretation of the relationships between incident characteristics and the occurrence of harm. Additionally, we created two standardized variables to capture key aspects of students' socioeconomic and racial composition in each school. The racial composition was measured as the proportion of non-white students calculated as $1 - \frac{\text{Number of white students}}{\text{Total enrollment}}$, and the economic situation was measured as the proportion of students receiving subsidized meals calculated as $\frac{\text{Number of students eligible for free or reduced lunch}}{\text{Total enrollment}}$. Standardizing both measures by total enrollment allows for meaningful comparisons across schools of different sizes and ensures that these variables reflect relative composition rather than absolute counts.
 
 
 R version and packages (citation)
 
-## 2.22 Data description
+## 2.4 Data description
 
 ```{r,include=FALSE}
 # Compute raw data dimensions
@@ -147,7 +124,7 @@ kable(data_description, format = "markdown", col.names = c("Variable", "Type", "
 ```
 
 
-## 2.3 Data summary and visualizations
+## 2.5 Data summary and visualizations
 
 
 # 5. Conclusion
