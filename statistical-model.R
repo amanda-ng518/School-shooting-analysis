@@ -66,7 +66,7 @@ summaryOR = tidy(model, exponentiate = TRUE, conf.int = TRUE) %>%
 
 # LRT
 null_model <- glm(killing_indicator ~ 1, family = binomial, data = train_data)
-anova(null_model, model, test = "Chisq") # 3.355e-05, significant
+anova(null_model, model, test = "Chisq") # 1.038e-07, significant
 
 # -----------------------------------------------------------
 # 6. Model diagnostics
@@ -74,7 +74,7 @@ anova(null_model, model, test = "Chisq") # 3.355e-05, significant
 # AUC
 pred_probs <- predict(model, newdata = test_data,type = "response")
 roc_obj <- roc(test_data$killing_indicator, pred_probs)
-plot(roc_obj, col = "blue", print.auc = TRUE) # 0.660
+plot(roc_obj, col = "blue", print.auc = TRUE) # 0.740
 
 # Sensitivity, Specificity, and Misclassification rates 
 thresholds <- seq(0, 1, 0.01)
@@ -97,7 +97,7 @@ ggplot(perf_data_long, aes(threshold, value, color = metric)) +
        title = "Performance Metrics vs. Threshold") +
   theme_minimal()
 
-threshold = 0.25
+threshold = 0.24
 pred_labels <- ifelse(pred_probs > threshold, 1, 0) 
 conf_matrix <- table(Predicted = pred_labels, Actual = test_data$killing_indicator) 
 conf_matrix[2,2] / (conf_matrix[2,2] + conf_matrix[1,2]) # Sensitivity
