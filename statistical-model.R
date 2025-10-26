@@ -21,6 +21,19 @@ index <- sample(1:nrow(shootings), size = 0.85 * nrow(shootings))  # 85% train, 
 train_data <- shootings[index, ]
 test_data <- shootings[-index, ]
 
+# Relevel categorical variables
+train_data$shooting_type <- as.factor(train_data$shooting_type)
+train_data$shooting_type <- relevel(train_data$shooting_type, ref = "Unclear")
+
+train_data$school_type <- as.factor(train_data$school_type)
+train_data$school_type <- relevel(train_data$school_type, ref = "Private")
+
+train_data$gender_shooter1 <- as.factor(train_data$gender_shooter1)
+train_data$gender_shooter1 <- relevel(train_data$gender_shooter1, ref = "Female")
+
+train_data$shooter_relationship1 <- as.factor(train_data$shooter_relationship1)
+train_data$shooter_relationship1 <- relevel(train_data$shooter_relationship1, ref = "Other, Unknown or No Connection")
+
 # -----------------------------------------------------------
 # 3. Fit logistic regression model on train dataset
 # -----------------------------------------------------------
@@ -55,14 +68,47 @@ sum(residuals(model, type = "pearson")^2)/df.residual(model)
 # -----------------------------------------------------------
 summary(model)
 
-summaryOR = tidy(model, exponentiate = TRUE, conf.int = TRUE) %>%
-  select(term, estimate, conf.low, conf.high, p.value) %>%
+model_summary <- tidy(model, exponentiate = FALSE, conf.int = TRUE) %>%
+  select(term, estimate, std.error, conf.low, conf.high, p.value) %>%
   rename(
-    OddsRatio = estimate,
-    Lower95CI = conf.low,
-    Upper95CI = conf.high
+    "Term" = term,
+    "Coefficient Estimate" = estimate,
+    #"Odds Ratio" = estimate,
+    "Standard Error" = std.error,
+    "p-value" = p.value
   ) %>%
-  mutate(across(c(OddsRatio, Lower95CI, Upper95CI, p.value), ~ round(., 4)))
+  mutate(
+    # Combine lower and upper CI into one formatted string
+    `95% CI` = paste0("[", round(conf.low, 4), ", ", round(conf.high, 4), "]"),
+    # Round numeric columns
+    across(c(`Coefficient Estimate`, `Standard Error`, `p-value`), ~ round(., 4)),
+    # Format p-values: show <0.0001 when smaller than threshold
+    `p-value` = if_else(`p-value` < 0.0001, "< 0.0001", as.character(round(`p-value`, 4)))
+  ) %>%
+  # Drop separate lower/upper CI columns 
+  select(Term, `Coefficient Estimate`, `Standard Error`, `95% CI`, `p-value`)
+
+model_summary <- model_summary %>%
+  mutate(Term = recode(Term,
+                       "(Intercept)" = "Intercept",
+                       "injured_indicator1" = "Injured",
+                       "school_typePublic" = "Public",
+                       "shooting_typeAccidental" = "Accidental",
+                       "shooting_typeIndiscriminate" = "Indiscriminate",
+                       "shooting_typeSuicide" = "Suicide",
+                       "shooting_typeTargeted" = "Targeted",
+                       "gender_shooter1Male" = "Male",
+                       "age_shooter1"= "Shooter Age",
+                       "non_white_prop" = "Proportion of Non-White Students",
+                       "lunch_prop" = "Proportion of Students Eligible for Subsidized Lunch",
+                       "shooter_relationship1Current Student" = "Current Student",
+                       "shooter_relationship1Family/Guardian of Student" = "Family/Guardian of Student",
+                       "shooter_relationship1Former Student" = "Former Student",
+                       "shooter_relationship1Non-Security Staff" = "Non-Security Staff",
+                       "shooter_relationship1Police/Security" = "Police/Security"
+  ))
+
+write_parquet(model_summary, "modelsummary.parquet")
 
 # LRT
 null_model <- glm(killing_indicator ~ 1, family = binomial, data = train_data)
