@@ -122,6 +122,16 @@ pred_probs <- predict(model, newdata = test_data,type = "response")
 roc_obj <- roc(test_data$killing_indicator, pred_probs)
 plot(roc_obj, col = "blue", print.auc = TRUE) # 0.727
 
+roc_data <- data.frame(
+  FalsePositiveRate = 1 - roc_obj$specificities,
+  TruePositiveRate = roc_obj$sensitivities,
+  Threshold = roc_obj$thresholds
+)
+
+roc_data$AUC <- as.numeric(auc(roc_obj))
+
+write_parquet(roc_data, "roc_data.parquet")
+
 # Sensitivity, Specificity, and Misclassification rates 
 thresholds <- seq(0, 1, 0.01)
 
@@ -136,6 +146,8 @@ perf_data <- as.data.frame(t(perf_data))
 perf_data$threshold <- thresholds
 
 perf_data_long <- perf_data %>% pivot_longer(-threshold, names_to = "metric", values_to = "value")
+
+write_parquet(perf_data_long, "perf_data_long.parquet")
 
 ggplot(perf_data_long, aes(threshold, value, color = metric)) +
   geom_line(size = 0.5) +
