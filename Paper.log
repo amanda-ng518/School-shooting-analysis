@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.25)  26 OCT 2025 01:45
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.25)  26 OCT 2025 14:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -932,37 +932,39 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 [2]
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 323.
+(Font)              scaled to size 7.0pt on input line 316.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 323.
+(Font)              scaled to size 5.0pt on input line 316.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00092pt on input line 323.
+(Font)              scaled to size 10.00092pt on input line 316.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 323.
+(Font)              scaled to size 7.00064pt on input line 316.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 323.
+(Font)              scaled to size 5.00046pt on input line 316.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 323.
+(Font)              scaled to size 9.99893pt on input line 316.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 323.
+(Font)              scaled to size 6.99925pt on input line 316.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 323.
+(Font)              scaled to size 4.99947pt on input line 316.
 
 
 [3]
-Overfull \hbox (8.01726pt too wide) in paragraph at lines 382--382
+Overfull \hbox (8.01726pt too wide) in paragraph at lines 376--376
 []|\TU/lmr/m/n/10 Measure|  
  []
 
 
-Overfull \hbox (11.59726pt too wide) in paragraph at lines 385--385
+Overfull \hbox (11.59726pt too wide) in paragraph at lines 379--379
 []|\TU/lmr/m/n/10 Standard 
  []
 
 
-Overfull \hbox (4.05725pt too wide) in paragraph at lines 386--386
+Overfull \hbox (4.05725pt too wide) in paragraph at lines 380--380
 []|\TU/lmr/m/n/10 Median|  
  []
+
+
 
 [4]
 File: Paper_files/figure-latex/unnamed-chunk-7-1.pdf Graphic file (type pdf)
@@ -984,7 +986,7 @@ File: Paper_files/figure-latex/unnamed-chunk-11-1.pdf Graphic file (type pdf)
 
 
 [7]
-Overfull \hbox (579.80006pt too wide) detected at line 548
+Overfull \hbox (579.80006pt too wide) detected at line 544
 [][]
  []
 
@@ -992,15 +994,25 @@ Overfull \hbox (579.80006pt too wide) detected at line 548
 
 [8]
 
-[9]
-
-[10]
+[9] [10]
 
 [11]
+File: Paper_files/figure-latex/unnamed-chunk-13-1.pdf Graphic file (type pdf)
+<Paper_files/figure-latex/unnamed-chunk-13-1.pdf>
+
 
 [12]
+File: Paper_files/figure-latex/unnamed-chunk-14-1.pdf Graphic file (type pdf)
+<Paper_files/figure-latex/unnamed-chunk-14-1.pdf>
 
-[13] (./Paper.aux)
+
+[13]
+
+[14]
+
+[15]
+
+[16] (./Paper.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-10-09>
@@ -1010,12 +1022,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 18565 strings out of 470404
- 337831 string characters out of 5485395
- 906961 words of memory out of 5000000
- 46673 multiletter control sequences out of 15000+600000
- 634254 words of font info for 91 fonts, out of 8000000 for 9000
+ 18587 strings out of 470404
+ 338854 string characters out of 5485395
+ 904919 words of memory out of 5000000
+ 46691 multiletter control sequences out of 15000+600000
+ 634262 words of font info for 92 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 90i,10n,114p,407b,476s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,10n,114p,407b,478s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Paper.pdf (13 pages).
+Output written on Paper.pdf (16 pages).
