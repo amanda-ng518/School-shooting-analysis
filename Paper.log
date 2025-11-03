@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.11.3)  3 NOV 2025 12:38
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.11.3)  3 NOV 2025 13:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -978,7 +978,7 @@ File: Paper_files/figure-latex/unnamed-chunk-10-1.pdf Graphic file (type pdf)
 File: Paper_files/figure-latex/unnamed-chunk-11-1.pdf Graphic file (type pdf)
 <use Paper_files/figure-latex/unnamed-chunk-11-1.pdf>
 [7]
-Overfull \hbox (579.80006pt too wide) detected at line 546
+Overfull \hbox (23.555pt too wide) detected at line 549
 [][]
  []
 
@@ -999,12 +999,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 18945 strings out of 470235
- 343287 string characters out of 5479014
- 913785 words of memory out of 5000000
- 47213 multiletter control sequences out of 15000+600000
+ 18949 strings out of 470235
+ 343340 string characters out of 5479014
+ 913804 words of memory out of 5000000
+ 47217 multiletter control sequences out of 15000+600000
  634262 words of font info for 92 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 90i,10n,114p,407b,480s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,10n,114p,404b,527s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on Paper.pdf (16 pages).

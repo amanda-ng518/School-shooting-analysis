@@ -31,7 +31,7 @@ shootings = read_parquet("shootings_cleaned.parquet")
 
 Gun violence in schools remains one of the most distressing forms of firearm-related harm in the United States. Each incident causes immediate loss and trauma while also increasing public concern over the safety of educational environments. Despite ongoing research, relatively little is known about why some school shootings result in fatalities while others do not. Understanding these factors is important for informing prevention strategies and school safety policies. Previous studies have examined individual-level factors such as shooter motivation [@Schibler2024-yw], access to firearms, and mental health [@Peterson2022-rz]. Fewer studies have examined contextual-level characteristics—features of the incident and school environment that may affect whether a shooting results in a fatality. This study examines these contextual factors to identify conditions that are associated with higher likelihoods of fatal outcomes.
 
-The analysis draws on The Washington Post School Shootings Database, which documents every act of gunfire on U.S. primary and secondary school campuses during school hours since 1999. The estimand of interest is the probability that a school shooting results in at least one killing. Using logistic regression, we modeled this probability as a function of several contextual characteristics, including whether the incident involved any injuries, the shooting type, the shooter’s demographics and relationship to the school community, and the broader racial and socioeconomic composition of the school.
+The analysis draws on The Washington Post School Shootings Database [@data], which documents every act of gunfire on U.S. primary and secondary school campuses during school hours since 1999. The estimand of interest is the probability that a school shooting results in at least one killing. Using logistic regression, we modeled this probability as a function of several contextual characteristics, including whether the incident involved any injuries, the shooting type, the shooter’s demographics and relationship to the school community, and the broader racial and socioeconomic composition of the school.
 
 Results show that that shootings with no non-shooter injuries, those classified as targeted or indiscriminate, and incidents involving shooters with a connection to the school were more likely to result in fatalities. These patterns suggest a higher degree of planning, precision, and familiarity with the school environment, reflecting more deliberate and focused attacks. Such findings underscore the importance of preventive strategies such as internal monitoring of students and staff, including robust threat assessment protocols, enhanced communication with law enforcement, and comprehensive emergency preparedness training. Understanding these factors can guide interventions aimed at reducing fatalities and improving overall school safety.
 
@@ -45,7 +45,7 @@ along with justifications for the model design. Section 4: Results interprets th
 
 ## 2.1 Data source
 
-The study draws on The Washington Post School Shootings Database (citation), a systematically compiled record of firearm incidents occurring at U.S. primary and secondary schools during school hours since the Columbine High School shooting on April 20, 1999. The database was developed by integrating multiple information channels, including Nexis archives, news reports, open-source databases, law enforcement records, school websites, and direct communications with school and police officials. Incidents were included only if gunfire occurred on campus immediately before, during, or after classes, thereby excluding after-hours events, accidental discharges injuring only the shooter, and suicides that posed no threat to others. Since no federal agency tracks school shootings, The Washington Post database represents one of the most comprehensive and systematically verified datasets available for studying these events. It further incorporates school-level demographic and enrollment information from the U.S. Department of Education’s Common Core of Data and Private School Universe Survey, allowing for contextual analyses of how school characteristics relate to the severity of shooting incidents.
+The study draws on The Washington Post School Shootings Database [@data], a systematically compiled record of firearm incidents occurring at U.S. primary and secondary schools during school hours since the Columbine High School shooting on April 20, 1999. The database was developed by integrating multiple information channels, including Nexis archives, news reports, open-source databases, law enforcement records, school websites, and direct communications with school and police officials. Incidents were included only if gunfire occurred on campus immediately before, during, or after classes, thereby excluding after-hours events, accidental discharges injuring only the shooter, and suicides that posed no threat to others. Since no federal agency tracks school shootings, The Washington Post database represents one of the most comprehensive and systematically verified datasets available for studying these events. It further incorporates school-level demographic and enrollment information from the U.S. Department of Education’s Common Core of Data and Private School Universe Survey, allowing for contextual analyses of how school characteristics relate to the severity of shooting incidents.
 
 ## 2.2 Data overview
 
@@ -71,9 +71,6 @@ According to Table 1, more than 97% of incidents did not involve a second shoote
 For shooter 1's age, missing values were imputed by the mean age within the same shooting type and state, with state- or overall means used as fallbacks. Shooter 1's gender was imputed probabilistically based on the observed state-level gender proportions, preserving underlying shooter gender distribution in the data. No fallback is needed here since male shooter proportions are available in all states. For the number of students eligible for free or reduced-price lunch, we first set all private schools to zero, as such programs typically apply only to public schools. For public schools, missing values were imputed using the average lunch proportion within each state, with the overall proportion used as a fallback. The imputed value was then scaled by the school’s total enrollment. Finally, missing counts of white students were imputed using the mean proportion of white students within each combination of shooting type, state, and school type and multiplied by school's total enrollment. Mean at state–school type level, and school type mean were used as fallbacks.
 
 We collapsed the number of killings and injuries variables into binary indicators. For observations with number of killed or injured greater than zero, the corresponding indicator was coded as “1”; otherwise, it was coded as “0”. This is appropriate because our study focuses on the presence or absence of harm in each incident, rather than the exact number. This approach hence simplifies the analysis, and facilitates clear interpretation of the relationships between incident characteristics and the occurrence of harm. Additionally, we created two standardized variables to capture key aspects of students' socioeconomic and racial composition in each school. The racial composition was measured as the proportion of non-white students calculated as $1 - \frac{\text{Number of white students}}{\text{Total enrollment}}$, and the economic situation was measured as the proportion of students receiving subsidized meals calculated as $\frac{\text{Number of students eligible for free or reduced lunch}}{\text{Total enrollment}}$. Standardizing both measures by total enrollment allows for meaningful comparisons across schools of different sizes and ensures that these variables reflect relative composition rather than absolute counts.
-
-
-R version and packages (citation)
 
 ## 2.4 Data description
 
@@ -388,10 +385,13 @@ $$
 \log\left(\frac{p_i}{1 - p_i}\right) 
 &= \beta_0 
 + \beta_1 \cdot I_{\text{Injured occured(i)}} + \beta_2 \cdot I_{\text{Public(i)}}\\
-&\quad + \beta_3 \cdot I_{\text{Shooting type = Accidental (i)}} + \beta_4 \cdot I_{\text{Shooting type = Indiscriminate (i)}} + \beta_5 \cdot I_{\text{Shooting type = Targeted (i)}} + \beta_6 \cdot I_{\text{Shooting type = Suicide (i)}}\\
+&\quad + \beta_3 \cdot I_{\text{Shooting type = Accidental (i)}} + \beta_4 \cdot I_{\text{Shooting type = Indiscriminate (i)}}\\
+&\quad + \beta_5 \cdot I_{\text{Shooting type = Targeted (i)}} + \beta_6 \cdot I_{\text{Shooting type = Suicide (i)}}\\
 &\quad + \beta_7 \cdot \text{Shooter Age}_{(i)}
 + \beta_8 \cdot I_{\text{Shooter Gender = Male(i)}} \\
-&\quad + \beta_9 \cdot I_{\text{Shooter Relationship = Current Student(i)}}+ \beta_{10} \cdot I_{\text{Shooter Relationship = Former Student(i)}} + \beta_{11} \cdot I_{\text{Shooter Relationship = Family/Guardian of Student(i)}} + \beta_{12} \cdot I_{\text{Shooter Relationship = Non-security Staff(i)}} + \beta_{13} \cdot I_{\text{Shooter Relationship = Police/Security(i)}}\\
+&\quad + \beta_9 \cdot I_{\text{Shooter Relationship = Current Student(i)}}+ \beta_{10} \cdot I_{\text{Shooter Relationship = Former Student(i)}}\\
+&\quad + \beta_{11} \cdot I_{\text{Shooter Relationship = Family/Guardian of Student(i)}} + \beta_{12} \cdot I_{\text{Shooter Relationship = Non-security Staff(i)}}\\
+&\quad + \beta_{13} \cdot I_{\text{Shooter Relationship = Police/Security(i)}}\\
 &\quad + \beta_{14} \cdot \text{Proportion of non-white students}_{(i)} \\
 &\quad + \beta_{15} \cdot \text{Proportion of students eligible for subsidized lunch}_{(i)} 
 \end{aligned}
@@ -469,7 +469,7 @@ roc_data = read_parquet("roc_data.parquet")
 auc_value <- unique(roc_data$AUC) 
 
 ggplot(roc_data, aes(x = FalsePositiveRate, y = TruePositiveRate)) +
-  geom_line(color = "#2E86C1", size = 0.5) +
+  geom_line(color = "#2E86C1", linewidth = 0.5) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "gray50") +
   annotate("text", x = 0.65, y = 0.15,
            label = paste("AUC =", round(auc_value, 3)),
