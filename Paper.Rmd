@@ -164,7 +164,7 @@ kable(num_summary_no, caption = "Shootings Without Killing Occured", digits = 2)
   column_spec(4, width = "5cm")
 ```
 
-Tables 3 and 4 show that shootings resulting in at least one killing were associated with a slightly older average shooter age, while non-fatal shootings occurred more often in schools with higher proportions of non-white students and students receiving subsidized lunch. These patterns suggest that these variables may influence the likelihood of a shooting being fatal. However, the substantial standard deviations in shooter's age indicate considerable heterogeneity within each group, highlighting that itself alone does not fully explain shooting outcomes. This heterogeneity should be kept in mind when interpreting the model results. Additional visualizations are provided in the Appendix.
+Tables 3 and 4 show that shootings resulting in at least one killing were associated with a slightly older average shooter age, while non-fatal shootings occurred more often in schools with higher proportions of non-white students and students receiving subsidized lunch. These patterns suggest that these variables may influence the likelihood of a shooting being fatal. However, the substantial standard deviations in each numerical variable indicate considerable heterogeneity within each group, highlighting that themselves alone does not fully explain shooting outcomes. This heterogeneity should be kept in mind when interpreting the model results. Additional visualizations are provided in the Appendix.
 
 ```{r, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center'}
 # Shooting Type
@@ -522,22 +522,21 @@ These findings suggest that fatal school shootings may be more predictable when 
 
 ## 5.2 Limitation
 
-numerical variables high sd:
-For modeling, this may imply that including these variables may help capture important trends, but the model should also account for variability within groups, possibly through interaction terms or more flexible modeling approaches. 
+As shown in Section 2.5, shooter's age, proportion of non-white students, and proportion of students eligible for subsidized lunch exhibited high standard deviations within both fatal and non-fatal incident groups. This suggests that these variables alone may not fully capture the underlying characteristics that differentiate fatal from non-fatal shootings. There may be unobserved variables, such as local law enforcement response times or shooter mental health history, influencing the likelihood of fatality that are not captured by the current model.
 
-suicide estimate  very high sd, too few cases
+Additionally, the model estimate for suicide-related shootings exhibited an extremely large standard error. This likely stems from the very limited number of cases in the dataset with only 12 in the fatal group and none in the non-fatal group, which severely constrains the reliability and generalizability of findings for this category. As a result, any conclusions drawn regarding suicide-related shootings should be interpreted with caution, and future analyses would benefit from larger, more representative samples to improve statistical stability.
+
+Lastly, data imbalance is an issue in our dataset. Specifically, we observe a disproportionate number of non fatal incidents (more than 77%). This imbalance creates challenges in training and evaluating our model. In particular, when applying a naive “predict-all-negative” approach (i.e. predicting all shootings to be non fatal), the misclassification rate is about 30% on the testing dataset. In fact, our model with the chosen "optimal" threshold demonstrates slightly worse misclassification rate, this suggest that it is not offering any improvement over the naive model and might not provide the expected level of overall predictive power.
 
 ## 5.3 Next Steps
 
-The Wald test results indicate that most school-context related predictors, such as school type, students' racial composition and subsidized lunch eligibility composition are statistically insignificant. Building on this insight, the next step in this research would involve implementing feature selection techniques, such as LASSO or StepAIC, to systematically eliminate demographic and other non-contributory predictors that do not significantly enhance model performance. This process aims to refine the model by reducing overfitting, enhancing predictive accuracy, and improving overall interpretability. 
+An improvement to address the wide dispersion observed in numerical variables within fatal and non-fatal incident groups is to adopt more flexible modeling strategies that better account for within-group variability. Approaches such as random effects models, hierarchical modeling, or non-linear transformations on numerical variables may help capture latent heterogeneity that simple linear terms overlook, ultimately yielding more stable and interpretable estimates.
 
-If all variables are excluded, it may suggest that Quercus engagement is not a reliable indicator of dropout risk, highlighting the need to explore alternative behavioral, academic, or engagement-related predictors.
+To further enhance model reliability, reducing the number of levels in categorical variables should be considered. Currently, variables such as shooting intention and shooter affiliation contain more than five levels, some with very few observations, leading to inflated standard errors and unstable estimates. Future analysis should collapse similar categories into broader, conceptually coherent groups, such as combining accidental and suicide-related shootings into a “non-aggressive intent” category, to improve statistical power and clarity.
 
-Further validation is necessary to assess the model’s generalizability. Currently, the dataset has been divided into training and testing subsets drawn from the same set of school shooting incidents. While this approach provides initial insight into the model’s predictive performance, evaluating the model on an independent dataset, such as shootings from the coming year would provide a more robust assessment of its reliability. This external validation would help determine whether the model’s predictive accuracy holds across varying social, demographic, or situational contexts of school shootings as time proceeds.
+The Wald test results indicate that most school-context predictors, including school type, racial composition, and subsidized lunch eligibility, are statistically insignificant. Building on this insight, future improvement of the model should incorporate feature selection techniques such as LASSO or StepAIC to systematically eliminate non-contributory predictors. This refinement would reduce overfitting, enhance predictive accuracy, and improve interpretability.
 
-further reduce categorical levels
-
-Alternative modeling approaches were considered. For example, models incorporating interaction terms (e.g., between shooting type and shooter–school relationship) or nonlinear specifications (e.g., polynomial terms for age) were explored conceptually but not implemented in the present analysis to maintain parsimony and interpretability given the limited sample size. Similarly, more complex classifiers such as random forests or penalized logistic regression could be applied in future work to assess potential nonlinearities or variable selection stability.
+Lastly, further validation is necessary to assess the model’s generalizability. The current evaluation relies on training and testing subsets drawn from the same dataset. While this provides initial insight into predictive performance, testing the model on an independent dataset, such as school shootings from subsequent years, would offer a more robust assessment of its reliability across varying social, demographic, and situational contexts.
 
 # 6. Appendix
 
