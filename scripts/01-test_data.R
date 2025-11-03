@@ -82,6 +82,15 @@ if (all(data$race_ethnicity_shooter2 %in% valid_race)) {
   stop("Test Failed: The 'race_ethnicity_shooter2' column contains invalid race names.")
 }
 
+# Check if the 'Shooting type' column contains only valid school type names
+valid_school_types <- c("private", "public")
+
+if (all(data$school_type %in% valid_school_types)) {
+  message("Test Passed: The 'school_type' column contains only valid school type names.")
+} else {
+  stop("Test Failed: The 'school_type' column contains invalid school type names.")
+}
+
 # Check numerical variables type
 if (class(data$white) == "integer") {
   message("Test Passed: Correct variable type for number of white students variable.")
@@ -101,11 +110,16 @@ if (class(data$lunch) == "integer") {
   stop("Test Failed: Incorrect variable type for number of students eligible for subsizied lunch variable.")
 }
 
-# Check if the 'Shooting type' column contains only valid school type names
-valid_school_types <- c("private", "public")
-
-if (all(data$school_type %in% valid_school_types)) {
-  message("Test Passed: The 'school_type' column contains only valid school type names.")
+# Check number of students eligible for subsidized lunch is not greater than total enrollment
+if (all(as.numeric(data$lunch) <= as.numeric(data$enrollment), na.rm = TRUE)) {
+  message("Test Passed: All schools have valid entry for number of students eligible for subsidized lunch.")
 } else {
-  stop("Test Failed: The 'school_type' column contains invalid school type names.")
+  stop("Test Failed: Some schools have more students eligible for subsidized lunch than its total enrollment.")
+}
+
+# Check number of white students is not greater than total enrollment
+if (all(as.numeric(data$white) <= as.numeric(data$enrollment), na.rm = TRUE)) {
+  message("Test Passed: All schools have valid entry for number of white students.")
+} else {
+  stop("Test Failed: Some schools have more white students than its total enrollment.")
 }
