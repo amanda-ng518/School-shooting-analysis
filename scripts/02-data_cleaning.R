@@ -19,7 +19,7 @@ nrow(data)
 ncol(data)
 
 # -----------------------------------------------------------
-# 3. Data Cleaning
+# 3. Basic Cleaning
 # -----------------------------------------------------------
 # Change all blank string into NA
 data <- data %>%
@@ -89,7 +89,9 @@ data$white <- as.integer(gsub(",", "", data$white))
 # Lunch
 data <- data %>% filter(lunch <= enrollment| is.na(lunch)) # exclude 3 obs with lunch > enrollment
 
-#--------------Missing values------------------#
+# -----------------------------------------------------------
+# 4. Examine Missing Values
+# -----------------------------------------------------------
 # Examine relevant variables
 # Exclude id, geographical and temporal variables
 # Exclude low grade, high grade of the school offers, staffing 
@@ -142,9 +144,11 @@ kable(missing_table, col.names = c("Variable", "Missing Count", "Missing Proport
 # Almost 45% observations have a missing resource_officer information -> hard to impute
 # More than 40% observations have missing weapon information -> hard to impute and too specific
 # More than 75% observations have missing weapon source information -> hard to impute and too specific
-# 130 obs with missing shooter age
+# 130 obs with missing shooter 1 age
 
-#------------------Impute data--------------------#
+# -----------------------------------------------------------
+# 5. Impute Missing Data
+# -----------------------------------------------------------
 
 # --- 1. Impute age_shooter1 ---
 data <- data %>%
@@ -230,15 +234,19 @@ data <- data %>%
   ) %>%
   select(-mean_white_prop_shooting, -mean_white_prop_state, -mean_white_prop_type)
 
-#--------------Create new variables-------------------#
+# -----------------------------------------------------------
+# 6. Create New Variables
+# -----------------------------------------------------------
 data <- data %>%mutate(
-    killing_indicator = as.factor(if_else(killed > 0, 1L, 0L)),
-    injured_indicator = as.factor(if_else(injured > 0, 1L, 0L)),
+    killing_indicator = as.factor(if_else(killed > 0, 1L, 0L)), # 1 if at least one killing occurred
+    injured_indicator = as.factor(if_else(injured > 0, 1L, 0L)), # 1 if at least one injury occurred
     lunch_prop = lunch / enrollment,
     non_white_prop = 1 - white / enrollment
   )
 
-#------------Dataset for analysis-----------#
+# -----------------------------------------------------------
+# 7. Data for Analysis
+# -----------------------------------------------------------
 shootings <- data%>%select(killing_indicator, injured_indicator, school_type, shooting_type, 
                            age_shooter1,gender_shooter1, shooter_relationship1,
                            non_white_prop, lunch_prop)
