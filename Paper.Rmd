@@ -2,6 +2,7 @@
 title: "Fatal US School Shootings Are More Likely in Targeted and Multi-Victim Events: Evidence from Logistic Regression on Contextual Factors"
 author: "Amanda Ng"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
+abstract: "This is abstract"
 output: 
   bookdown::pdf_document2:
     latex_engine: xelatex
@@ -25,8 +26,6 @@ library(kableExtra)
 # Load data
 shootings = read_parquet("shootings_cleaned.parquet")
 ```
-
-# Abstract
 
 # Introduction {#sec-intro}
 
