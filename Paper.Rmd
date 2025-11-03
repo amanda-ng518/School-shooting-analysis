@@ -5,6 +5,12 @@ date: "2025-10-25"
 output: 
   pdf_document:
     latex_engine: xelatex
+    citation_package: natbib
+  bookdown::pdf_book:
+    citation_package: biblatex
+bibliography: "references.bib"
+biblio-style: "apalike"
+link-citations: true
 ---
 
 ```{r, include=FALSE}
