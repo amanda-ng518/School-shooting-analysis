@@ -24,7 +24,7 @@ library(pROC)
 library(kableExtra)
 
 # Load data
-shootings = read_parquet("shootings_cleaned.parquet")
+shootings = read_parquet("data/01-cleaned_data/shootings_cleaned.parquet")
 ```
 
 # Introduction {#sec-intro}
@@ -59,11 +59,10 @@ One observation had shooter 1's gender recorded as “h,” which was presumed t
 Below is a summary of (non-zero) count and proportion of missing values in our variables of interested after basic cleaning.
 
 ```{r Table1, echo=FALSE}
-missing_table = read_parquet("missing_table.parquet")
+missing_table = read_parquet("data/02-analysis_data/missing_table.parquet")
 kable(missing_table, col.names = c("Variable", "Missing Count", "Missing Proportion (%)"), 
       caption = "Summary of Missing Values in Interested Variables")
 ```
-
 
 According to Table \@ref(tab:Table1), more than 97% of incidents did not involve a second shooter, indicating that the vast majority of incidents are perpetrated by a single individual. Variables "presence of a resource officer", "weapon used", and "source of the weapon" contains missing values for over 40% of the observations. The high proportion of missing values, combined with the specificity uncoded in weapon-related variables, makes reliable imputation impractical. Therefore, in the following analysis, we exclude all information related to a second shooter, as well as presence of a resource officer and weapons.
 
@@ -72,12 +71,6 @@ For shooter 1's age, missing values were imputed by the mean age within the same
 We collapsed the number of killings and injuries variables into binary indicators. For observations with number of killed or injured greater than zero, the corresponding indicator was coded as “1”; otherwise, it was coded as “0”. This is appropriate because our study focuses on the presence or absence of harm in each incident, rather than the exact number. This approach hence simplifies the analysis, and facilitates clear interpretation of the relationships between incident characteristics and the occurrence of harm. Additionally, we created two standardized variables to capture key aspects of students' socioeconomic and racial composition in each school. The racial composition was measured as the proportion of non-white students calculated as $1 - \frac{\text{Number of white students}}{\text{Total enrollment}}$, and the economic situation was measured as the proportion of students receiving subsidized meals calculated as $\frac{\text{Number of students eligible for free or reduced lunch}}{\text{Total enrollment}}$. Standardizing both measures by total enrollment allows for meaningful comparisons across schools of different sizes and ensures that these variables reflect relative composition rather than absolute counts.
 
 ## Data description
-
-```{r,include=FALSE}
-# Compute raw data dimensions
-nrow(shootings) # Total = 424
-ncol(shootings) # Total = 9
-```
 
 The cleaned data consists of 424 observations and 9 variables. Below is a summary description of all variables in the cleaned dataset.
 
@@ -136,15 +129,12 @@ In total, the dataset includes 424 shooting incidents. Among them, 328 cases inv
 
 ```{r, include = FALSE}
 killing_yes_data = shootings%>%filter(killing_indicator == 1)
-n_yes = nrow(killing_yes_data) # 99
 killing_no_data = shootings%>%filter(killing_indicator == 0)
-n_no = nrow(killing_no_data) # 328
 ```
 
-
 ```{r Table3, echo=FALSE}
-num_summary_yes = read_parquet("num_summary_yes.parquet")
-num_summary_no = read_parquet("num_summary_no.parquet")
+num_summary_yes = read_parquet("data/02-analysis_data/num_summary_yes.parquet")
+num_summary_no = read_parquet("data/02-analysis_data/num_summary_no.parquet")
 
 kable(num_summary_yes, caption = "Shootings With Killing Occured", digits = 2)%>%
   column_spec(1, width = "2cm")%>%
@@ -447,7 +437,7 @@ For model evaluation, the data were randomly divided into a training set (85%) a
 
 Below is a summary table of the odd ratios based on coefficient estimates from the fitted model:
 ```{r table5, echo=FALSE}
-modelsummary <- read_parquet("modelsummary.parquet")
+modelsummary <- read_parquet("data/02-analysis_data/modelsummary.parquet")
 kable(modelsummary, caption = "Summary table of Model Coefficient Estimates")%>%
   column_spec(1, width = "4cm")
 ```
@@ -462,11 +452,10 @@ For numerical variables, the exponentiated coefficients represents the odds rati
 
 Overall, these results indicate that contextual factors of the shooting incident, particularly injuries occurrence and whether the shooter was affiliated with the school community play an important role in determining whether a school shooting becomes fatal.
 
-We conducted a Likelihood Ratio Test to assess the overall significance of the model, rejecting the null
-hypothesis that none of the covariates are linearly related to the log-odds of killing occurred (p = 5.078e-07 < 0.05). This suggests that at least one predictor in the model is significantly associated with killing occurrance.
+We conducted a Likelihood Ratio Test to assess the overall significance of the model, rejecting the null hypothesis that none of the covariates are linearly related to the log-odds of killing occurred (p = 5.078e-07 < 0.05). This suggests that at least one predictor in the model is significantly associated with killing occurrance.
 
 ```{r fig6, echo=FALSE}
-roc_data = read_parquet("roc_data.parquet")
+roc_data = read_parquet("data/02-analysis_data/roc_data.parquet")
 auc_value <- unique(roc_data$AUC) 
 
 ggplot(roc_data, aes(x = FalsePositiveRate, y = TruePositiveRate)) +
@@ -496,7 +485,7 @@ Below is a figure summarizing sensitivity, specificity, and misclassification ra
 using different threshold values (i.e. the cut-off probability to classify a shooting incident into the killing occurred group).
 
 ```{r fig7, echo = FALSE}
-perf_data_long = read_parquet("perf_data_long.parquet")
+perf_data_long = read_parquet("data/02-analysis_data/perf_data_long.parquet")
 ggplot(perf_data_long, aes(threshold, value, color = metric)) +
   geom_line(linewidth = 0.5) +
   labs(x = "Threshold", y = "Metric value", color = "Metric",

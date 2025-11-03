@@ -11,7 +11,7 @@ library(ggplot2)
 # -----------------------------------------------------------
 # 2. Read in the data 
 # -----------------------------------------------------------
-shootings = read_parquet("shootings_cleaned.parquet")
+shootings = read_parquet("data/01-cleaned_data/shootings_cleaned.parquet")
 
 # -----------------------------------------------------------
 # 3. Separate train and test datasets
@@ -40,6 +40,7 @@ train_data$shooter_relationship1 <- relevel(train_data$shooter_relationship1, re
 model <- glm(killing_indicator ~ .,
              data = train_data, family = binomial)
 
+saveRDS(model,file = "models/logistic_regression_model.rds")
 # -----------------------------------------------------------
 # 4. Model assumptions
 # -----------------------------------------------------------
@@ -108,7 +109,7 @@ model_summary <- model_summary %>%
                        "shooter_relationship1Police/Security" = "Police/Security"
   ))
 
-write_parquet(model_summary, "modelsummary.parquet")
+write_parquet(model_summary, "data/02-analysis_data/modelsummary.parquet")
 
 # LRT
 null_model <- glm(killing_indicator ~ 1, family = binomial, data = train_data)
@@ -147,7 +148,7 @@ perf_data$threshold <- thresholds
 
 perf_data_long <- perf_data %>% pivot_longer(-threshold, names_to = "metric", values_to = "value")
 
-write_parquet(perf_data_long, "perf_data_long.parquet")
+write_parquet(perf_data_long, "data/02-analysis_data/perf_data_long.parquet")
 
 ggplot(perf_data_long, aes(threshold, value, color = metric)) +
   geom_line(size = 0.5) +
