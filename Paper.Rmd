@@ -37,7 +37,7 @@ Section 2: Data describes the data source, alongside the cleaning and
 preparation of the dataset for analysis. A summary of key variables and exploratory data 
 visualizations is also presented. Section 3: Modelling explains the logistic regression approach
 used to analyze the relationship between fatality likelihood and contextual characteristics, 
-along with justifications for the model design. Section 4: Results interprets the effects of predictors and practical applicability of the model in terms of performance metrics. Section 5: Discussion summarizes the main findings, limitations of current study and outlines directions for future studies. Supporting information, including full details of dataset and additional plots are provided in Section 6: Appendix.
+along with justifications for the model design. Section 4: Results interprets the effects of predictors and practical applicability of the model in terms of performance metrics. Section 5: Discussion summarizes the main findings, limitations of current study and outlines directions for future studies. Supporting information, including details of full dataset and additional plots are provided in Section 6: Appendix.
 
 # 2. Data
 
