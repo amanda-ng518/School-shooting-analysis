@@ -23,7 +23,6 @@ n_yes = nrow(killing_yes_data) # 99
 killing_no_data = shootings%>%filter(killing_indicator == 0)
 n_no = nrow(killing_no_data) # 328
 
-
 # -----------------------------------------------------------
 # 4. Numeric variables summary
 # -----------------------------------------------------------
@@ -31,6 +30,7 @@ n_no = nrow(killing_no_data) # 328
 # Numeric variables by killing indicator summary table
 numeric_vars <- c("age_shooter1", "non_white_prop", "lunch_prop")
 
+# Function to summarize numerical variables
 make_summary <- function(df) {
   df %>%
     summarise(across(all_of(numeric_vars),
@@ -56,18 +56,20 @@ table_names <- c(
   "Proportion of Students with Subsidized Lunch" = "lunch_prop"
 )
 
+# Produce summaries for each group
 num_summary_yes <- make_summary(filter(shootings, killing_indicator == 1)) %>% 
   rename(!!!table_names)
 num_summary_no <- make_summary(filter(shootings, killing_indicator == 0)) %>% 
   rename(!!!table_names)
 
+# Generate tables
 kable(num_summary_yes, caption = "Shootings with Killings", digits = 2)
 kable(num_summary_no, caption = "Shootings without Killings", digits = 2)
 
 write_parquet(num_summary_yes, "data/02-analysis_data/num_summary_yes.parquet")
 write_parquet(num_summary_no, "data/02-analysis_data/num_summary_no.parquet")
 
-# Shooter age
+# Shooter age histogram
 ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
@@ -104,7 +106,7 @@ ggplot(shootings, aes(x = killing_indicator, y = age_shooter1)) +
   )
 
 
-# Proportion of Non-white student
+# Proportion of Non-white student histogram
 ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
@@ -140,7 +142,7 @@ ggplot(shootings, aes(x = killing_indicator, y = non_white_prop)) +
     axis.text = element_text(size = 12)
   )
 
-# Proportion of lunch distribution
+# Proportion of lunch distribution histogram
 ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
