@@ -54,6 +54,34 @@ if (all(data$shooting_type %in% valid_types)) {
   stop("Test Failed: The 'shooting_type' column contains invalid shooting type names.")
 }
 
+# Check if the 'shooter gender' column contains only valid gender names
+valid_genders <- c("f", "m")
+
+if (all(data$gender_shooter1 %in% valid_genders)) {
+  message("Test Passed: The 'gender_shooter1' column contains only valid gender names.")
+} else {
+  stop("Test Failed: The 'gender_shooter1' column contains invalid gender names.")
+}
+if (all(data$gender_shooter2 %in% valid_genders)) {
+  message("Test Passed: The 'gender_shooter2' column contains only valid gender names.")
+} else {
+  stop("Test Failed: The 'gender_shooter2' column contains invalid gender names.")
+}
+
+# Check if the 'shooter race' column contains only valid race names
+valid_race <- c("a", "ai", "b","h","w")
+
+if (all(data$race_ethnicity_shooter1 %in% valid_race)) {
+  message("Test Passed: The 'race_ethnicity_shooter1' column contains only valid race names.")
+} else {
+  stop("Test Failed: The 'race_ethnicity_shooter1' column contains invalid race names.")
+}
+if (all(data$race_ethnicity_shooter2 %in% valid_race)) {
+  message("Test Passed: The 'race_ethnicity_shooter2' column contains only valid race names.")
+} else {
+  stop("Test Failed: The 'race_ethnicity_shooter2' column contains invalid race names.")
+}
+
 # Check numerical variables type
 if (class(data$white) == "integer") {
   message("Test Passed: Correct variable type for number of white students variable.")
