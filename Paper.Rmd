@@ -7,7 +7,6 @@ output:
     latex_engine: xelatex
     citation_package: natbib
 bibliography: "references.bib"
-link-citations: true
 ---
 
 ```{r, include=FALSE}
