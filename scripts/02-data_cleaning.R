@@ -52,7 +52,6 @@ data <- data %>%
     shooting_type = if_else(is.na(shooting_type), "unclear", shooting_type), 
     shooting_type = str_to_title(shooting_type)   # pretty capitalization
   )
-
 unique(data$shooting_type)
 
 # Shooter 1 relationship
@@ -74,7 +73,6 @@ unique(data$shooter_relationship1)
 data <- data %>% filter(gender_shooter1 == "m"|gender_shooter1 == "f"| is.na(gender_shooter1)) # exclude single observation with "h"
 
 # Rename categorical variables value
-
 data <- data%>%mutate(
   gender_shooter1 = case_when(gender_shooter1 == "m" ~ "Male",
                               gender_shooter1 == "f" ~ "Female"),
@@ -83,13 +81,13 @@ data <- data%>%mutate(
 )
 
 
-# Transform back to integer representation
+# Transform numerical variables back to integer representation
 data$lunch <- as.integer(gsub(",", "", data$lunch))
 data$enrollment <- as.integer(gsub(",", "", data$enrollment))
 data$white <- as.integer(gsub(",", "", data$white))
 
 # Lunch
-data <- data %>% filter(lunch <= enrollment| is.na(lunch)) # exclude 3 obs with lunch>enrollment
+data <- data %>% filter(lunch <= enrollment| is.na(lunch)) # exclude 3 obs with lunch > enrollment
 
 #--------------Missing values------------------#
 # Examine relevant variables
