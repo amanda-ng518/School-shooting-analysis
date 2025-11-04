@@ -187,7 +187,7 @@ ggplot(shooting_type_combined_data, aes(x = shooting_type, y = shooting_type_per
   theme(axis.text.x = element_text(size = 7),
         axis.title.x =element_text(size = 8),
         axis.title.y =element_text(size = 8),
-        plot.title = element_text(size = 10, face = "bold"),
+        plot.title = element_text(size = 12),
         legend.text = element_text(size = 7),
         legend.title = element_text(size = 8))
 ```
@@ -223,7 +223,7 @@ ggplot(school_type_combined_data, aes(x = school_type, y = school_type_percent, 
   theme(axis.text.x = element_text(size = 7),
         axis.title.x =element_text(size = 8),
         axis.title.y =element_text(size = 8),
-        plot.title = element_text(size = 10, face = "bold"),
+        plot.title = element_text(size = 12),
         legend.text = element_text(size = 7),
         legend.title = element_text(size = 8))
 ```
@@ -258,7 +258,7 @@ ggplot(gender_combined_data, aes(x = gender_shooter1, y = gender_percent, fill =
   theme(axis.text.x = element_text(size = 7),
         axis.title.x =element_text(size = 8),
         axis.title.y =element_text(size = 8),
-        plot.title = element_text(size = 10, face = "bold"),
+        plot.title = element_text(size = 12),
         legend.text = element_text(size = 7),
         legend.title = element_text(size = 8))
 ```
@@ -294,7 +294,7 @@ ggplot(shooter_relationship_combined_data, aes(x = shooter_relationship1, y = sh
     theme(axis.text.x = element_text(size = 7,angle = 45, hjust = 1),
         axis.title.x =element_text(size = 8),
         axis.title.y =element_text(size = 8),
-        plot.title = element_text(size = 10, face = "bold"),
+        plot.title = element_text(size = 12),
         legend.text = element_text(size = 7),
         legend.title = element_text(size = 8))
 ```
@@ -336,7 +336,7 @@ ggplot(injured_combined_data, aes(x = injured_indicator, y = injured_percent, fi
     theme(axis.text.x = element_text(size = 7),
         axis.title.x =element_text(size = 8),
         axis.title.y =element_text(size = 8),
-        plot.title = element_text(size = 10, face = "bold"),
+        plot.title = element_text(size = 12),
         legend.text = element_text(size = 7),
         legend.title = element_text(size = 8))
 
@@ -441,13 +441,13 @@ For all categorical variables, the exponentiated coefficients represent the odds
 
 to involve fatalities, suggesting that incidents resulting in injuries alone tend to be less severe or potentially interrupted before turning deadly. Compared to private schools, shootings in public schools were also less likely to involve fatalities. Relative to unclear shooting intention, targeted and indiscriminate shootings were more likely to result in fatalities with odds ratios greater than 2, whereas accidental and suicide-related shootings were less likely to result in fatalities. Note that suicide-related shootings yielded an extremely large negative estimate with high uncertainty, possibly due to very few such cases in the data. However, the differences between any categorical level and the reference level of school type and shooting type are statistically insignificant. Male shooters were not found to differ significantly from female shooters in fatality likelihood. Shooters who had some affiliation with the school community were more likely to commit fatal shootings compared to unaffiliated individuals, with police/security staff posing the highest risk, followed by non-security staff and current students. This difference is statistically significant for current students($p = 0.0152$) and marginal significant for police/security staff ($p = 0.0583$).
 
-For numerical variables, the exponentiated coefficients represent the odds ratio of killing occurrence in a school shooting associated with a one-unit increase in the variable. Assuming all other predictors are fixed, a shooter who is a year older is associated with a statistically insignificant small increase (1.3%) in the probability of a killing occurrence. This implies that age differences among shooters do not substantially affect whether a shooting results in fatalities. Since both school-level demographic variables (proportion of non-white students and proportion of students eligible for subsidized lunch) are defined as proportions, it does not make sense to increase a proportion (which is between 0 and 1) by 1. Therefore, we interpret them in terms of a fraction of the coefficient. The odds of a killing occurrence if a school has 10% of students who are non-white is $exp(-0.7242*0.1) = 0.93$ times that of a school with no non-white students, assuming fixed levels for all other predictors. The odds of a killing occurrence if a school has 10% of students eligible for subsidized lunch is $exp(-0.3045*0.1) = 0.97$ times that of a school with no students eligible for subsidized lunch. This suggests that schools with higher proportions of non-white and economically disadvantaged students were, if anything, slightly less likely to result in fatalities, though these associations were not statistically significant.
+For numerical variables, the exponentiated coefficients represent the odds ratio of killing occurrence in a school shooting associated with a one-unit increase in the variable. Assuming all other predictors are fixed, a shooter who is a year older is associated with a statistically insignificant small increase (1.3%) in the probability of a killing occurrence. This implies that age differences among shooters do not substantially affect whether a shooting results in fatalities. Since both school-level demographic variables (proportion of non-white students and proportion of students eligible for subsidized lunch) are defined as proportions, it does not make sense to increase a proportion (which is between 0 and 1) by 1. Therefore, we interpret them in terms of a fraction of the coefficient. The odds of a killing occurrence if a school has 10% of students who are non-white is $exp(-0.7242 \times 0.1) = 0.93$ times that of a school with no non-white students, assuming fixed levels for all other predictors. The odds of a killing occurrence if a school has 10% of students eligible for subsidized lunch is $exp(-0.3045 \times 0.1) = 0.97$ times that of a school with no students eligible for subsidized lunch. This suggests that schools with higher proportions of non-white and economically disadvantaged students were, if anything, slightly less likely to result in fatalities, though these associations were not statistically significant.
 
 Overall, these results indicate that contextual factors of the shooting incident, particularly the occurrence of injuries and whether the shooter was affiliated with the school community, play an important role in determining whether a school shooting becomes fatal.
 
 We conducted a Likelihood Ratio Test to assess the overall significance of the model, rejecting the null hypothesis that none of the covariates are linearly related to the log-odds of a killing occurring ($p = 5.078e-07 < 0.05$). This suggests that at least one predictor in the model is significantly associated with killing occurrence.
 
-```{r fig6, echo=FALSE, fig.cap= 'Receiver operating characteristic (ROC) Curve for the logistic regression model. The ROC curve displays the diagnostic performance of the logistic regression model using shootings context-related predictors, with true positive rate plotted against false postive rate. The area under the curve (AUC) is 0.727.'}
+```{r fig6, echo=FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Receiver operating characteristic (ROC) Curve for the logistic regression model. The ROC curve displays the diagnostic performance of the logistic regression model using shootings context-related predictors, with true positive rate plotted against false postive rate. The area under the curve (AUC) is 0.727.'}
 roc_data = read_parquet("data/02-analysis_data/roc_data.parquet")
 auc_value <- unique(roc_data$AUC) 
 
@@ -456,13 +456,20 @@ ggplot(roc_data, aes(x = FalsePositiveRate, y = TruePositiveRate)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "gray50") +
   annotate("text", x = 0.65, y = 0.15,
            label = paste("AUC =", round(auc_value, 3)),
-           size = 5, fontface = "bold", color = "black") +
+           size = 5, color = "black") +
   labs(
     title = "ROC Curve",
     x = "False Positive Rate (1 - Specificity)",
     y = "True Positive Rate (Sensitivity)"
   ) +
-  theme_minimal(base_size = 13)
+  theme_minimal()+ 
+    theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+
 ```
 
 The area under the ROC curve is 0.727, indicating that the model has good discriminative ability to distinguish between shooting incidents that involved at least one killing and those that did not.
@@ -473,13 +480,20 @@ Sensitivity, specificity, and misclassification rate are key performance metrics
 
 Below is a figure summarizing sensitivity, specificity, and misclassification rates on the unseen testing data using different threshold values (i.e., the cut-off probability used to classify a shooting incident into the “killing occurred” group).
 
-```{r fig7, echo = FALSE, fig.cap= 'Performance Metrics vs. Threshold for the logistic regression model. Each colored line represents the trend of the metric value as the threshold increases from 0 to 1. Red line represents missclassification rate, green line represents sentisivity and blue line represents specificity. '}
+```{r fig7, echo = FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Performance Metrics vs. Threshold for the logistic regression model. Each colored line represents the trend of the metric value as the threshold increases from 0 to 1. Red line represents missclassification rate, green line represents sentisivity and blue line represents specificity. '}
 perf_data_long = read_parquet("data/02-analysis_data/perf_data_long.parquet")
 ggplot(perf_data_long, aes(threshold, value, color = metric)) +
   geom_line(linewidth = 0.5) +
   labs(x = "Threshold", y = "Metric value", color = "Metric",
        title = "Performance Metrics vs. Threshold") +
-  theme_minimal()
+  theme_minimal()+ 
+    theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+
 ```
 
 The performance evaluation of the model highlights the fundamental trade-off between sensitivity and specificity when selecting a classification threshold for identifying whether a shooting involved a killing. Lower threshold values, such as 0.1, yield higher sensitivity (100%), meaning the model successfully identifies all fatal shootings. However, this comes with lower specificity (26.67%), indicating that many non-fatal shootings are also classified as fatal. While both fatal and non-fatal shootings are serious incidents, higher sensitivity ensures that cases involving killings are not missed, although more than half of the shootings are misclassified at this level.
