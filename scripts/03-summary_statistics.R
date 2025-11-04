@@ -88,24 +88,6 @@ ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 12))
 
-ggplot(shootings, aes(x = killing_indicator, y = age_shooter1)) +
-  geom_boxplot(alpha = 0.7, width = 0.6,
-               outlier.shape = 21, outlier.fill = "white", outlier.color = "black") +
-  scale_x_discrete(labels = c("0" = "No", "1" = "Yes")) +
-  labs(
-    title = "Distribution of Shooter Age by Killing Indicator",
-    x = "Killing occurred",
-    y = "Shooter age"
-  ) +
-  theme_minimal(base_size = 14) +
-  theme(
-    plot.title = element_text(size = 16, hjust = 0.5),
-    axis.title.x = element_text(size = 13),
-    axis.title.y = element_text(size = 13),
-    axis.text = element_text(size = 12)
-  )
-
-
 # Proportion of Non-white student histogram
 ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
@@ -125,29 +107,12 @@ ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 12))
 
-ggplot(shootings, aes(x = killing_indicator, y = non_white_prop)) +
-  geom_boxplot(alpha = 0.7, width = 0.6,
-               outlier.shape = 21, outlier.fill = "white", outlier.color = "black") +
-  scale_x_discrete(labels = c("0" = "No", "1" = "Yes")) +
-  labs(
-    title = "Distribution of Proportion of Non-white student by Killing Indicator",
-    x = "Killing occurred",
-    y = "Proportion of Non-white student"
-  ) +
-  theme_minimal(base_size = 14) +
-  theme(
-    plot.title = element_text(size = 16, hjust = 0.5),
-    axis.title.x = element_text(size = 13),
-    axis.title.y = element_text(size = 13),
-    axis.text = element_text(size = 12)
-  )
-
 # Proportion of lunch distribution histogram
 ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
-    title = "Distribution of Proportion of lunch by Killing Indicator",
-    x = "Proportion of Lunch",
+    title = "Distribution of Proportion of Students Eligible for Subsizied Lunch by Killing Indicator",
+    x = "Proportion of Students Eligible for Subsizied Lunch",
     y = "Frequency"
   ) +
   scale_fill_manual(values = c("0" = "blue", "1" = "red"),
@@ -160,24 +125,6 @@ ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
         plot.title = element_text(size = 16),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 12))
-
-ggplot(shootings, aes(x = killing_indicator, y = lunch_prop)) +
-  geom_boxplot(alpha = 0.7, width = 0.6,
-               outlier.shape = 21, outlier.fill = "white", outlier.color = "black") +
-  scale_x_discrete(labels = c("0" = "No", "1" = "Yes")) +
-  labs(
-    title = "Distribution of Proportion of lunch by Killing Indicator",
-    x = "Killing occurred",
-    y = "Proportion of lunch"
-  ) +
-  theme_minimal(base_size = 14) +
-  theme(
-    plot.title = element_text(size = 16, hjust = 0.5),
-    axis.title.x = element_text(size = 13),
-    axis.title.y = element_text(size = 13),
-    axis.text = element_text(size = 12)
-  )
-
 
 # -----------------------------------------------------------
 # 5. Categorical variables summary
