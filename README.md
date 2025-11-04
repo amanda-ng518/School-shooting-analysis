@@ -13,11 +13,20 @@ The repo is structured as:
 -   `data/01-cleaned_data` contains the cleaned dataset that was constructed.
 -   `data/02-analysis_data` contains the interim data, including missing value table, numerical variables statistics summary table, model ROC data, and model performance metrics table.
 -   `model` contains fitted logistic regression model. 
--   `other` contains relevant literature, details about LLM chat interactions, and sketches.
+-   `other` contains relevant literature and project proposal.
 -   `paper` contains the files used to generate the paper, including the Quarto document and reference bibliography file, as well as the PDF of the paper. 
 -   `scripts` contains the R scripts used to clean data and run statistical model.
 
+## Execution Instructions
+
+1. [OPTIONAL] Run `scripts/00_install_packages.R` to install required R packages.
+2. [OPTIONAL] Run `scripts/01-transforming_file_type.R` to transform original csv data into parquet data.
+3. Run `scripts/02-data_cleaning.R` to clean the data.
+4. [OPTIONAL] Run `scripts/03-test_data.R` to confirm cleaned data has no missing values, and all entries are valid.
+5. Run `scrips/04-summary_statistics.R` to summarize the dataset for the model.
+6. Run `scripts/05-statistical_model.R` to create model, conduct model diagnostics and evaluations.
+7. Run `outputs/paper.qmd` and Render to generate the PDF of this paper.
 
 ## Statement on LLM usage
 
-Aspects of the code were written with the help of the auto-complete tool, Codriver. The abstract and introduction were written with the help of ChatHorse and the entire chat history is available in inputs/llms/usage.txt.
+Data visualization and summary table codes were written with the help of the auto-complete tool, Copilot. 
