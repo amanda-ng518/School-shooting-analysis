@@ -11,7 +11,7 @@ library(ggplot2)
 # -----------------------------------------------------------
 # 2. Read in the data 
 # -----------------------------------------------------------
-shootings = read_parquet("shootings_cleaned.parquet")
+shootings = read_parquet(here("data/01-cleaned_data/shootings_cleaned.parquet"))
 
 # -----------------------------------------------------------
 # 3. Separate train and test datasets
@@ -37,9 +37,12 @@ train_data$shooter_relationship1 <- relevel(train_data$shooter_relationship1, re
 # -----------------------------------------------------------
 # 3. Fit logistic regression model on train dataset
 # -----------------------------------------------------------
+# Fit model
 model <- glm(killing_indicator ~ .,
              data = train_data, family = binomial)
 
+# Save model outputs
+saveRDS(model, here("models/logistic_regression_model.rds"))
 # -----------------------------------------------------------
 # 4. Model assumptions
 # -----------------------------------------------------------
@@ -48,7 +51,8 @@ model <- glm(killing_indicator ~ .,
 # 4.2 Independence of Observations
 
 # 4.3 No Multicollinearity
-vif(model) # all below 5, pass
+vif(model) 
+# all below 5, pass
 detach("package:car", unload = TRUE)
 
 # 4.4 Linearity of Independent Variables and Log Odds
@@ -66,8 +70,6 @@ sum(residuals(model, type = "pearson")^2)/df.residual(model)
 # -----------------------------------------------------------
 # 5. Model Estimates and Hypothesis test
 # -----------------------------------------------------------
-summary(model)
-
 model_summary <- tidy(model, exponentiate = FALSE, conf.int = TRUE) %>%
   select(term, estimate, std.error, conf.low, conf.high, p.value) %>%
   rename(
@@ -107,56 +109,52 @@ model_summary <- model_summary %>%
                        "shooter_relationship1Non-Security Staff" = "Non-Security Staff",
                        "shooter_relationship1Police/Security" = "Police/Security"
   ))
-
-write_parquet(model_summary, "modelsummary.parquet")
+# Save model summary
+write_parquet(model_summary, here("data/02-analysis_data/modelsummary.parquet"))
 
 # LRT
 null_model <- glm(killing_indicator ~ 1, family = binomial, data = train_data)
-anova(null_model, model, test = "Chisq") # 5.078e-07, significant
+anova(null_model, model, test = "Chisq") # p = 5.078e-07, significant
 
 # -----------------------------------------------------------
 # 6. Model diagnostics
 # -----------------------------------------------------------
-# AUC
+# ROC Curve
 pred_probs <- predict(model, newdata = test_data,type = "response")
 roc_obj <- roc(test_data$killing_indicator, pred_probs)
-plot(roc_obj, col = "blue", print.auc = TRUE) # 0.727
-
 roc_data <- data.frame(
   FalsePositiveRate = 1 - roc_obj$specificities,
   TruePositiveRate = roc_obj$sensitivities,
   Threshold = roc_obj$thresholds
 )
-
-roc_data$AUC <- as.numeric(auc(roc_obj))
-
-write_parquet(roc_data, "roc_data.parquet")
+# AUC
+roc_data$AUC <- as.numeric(auc(roc_obj)) 
+# Save ROC and AUC
+write_parquet(roc_data, here("data/02-analysis_data/roc_data.parquet"))
 
 # Sensitivity, Specificity, and Misclassification rates 
 thresholds <- seq(0, 1, 0.01)
-
 perf_data <- sapply(thresholds, function(t) {
   pred <- ifelse(pred_probs > t, 1, 0)
   cm <- table(factor(pred, levels = 0:1), factor(test_data$killing_indicator, levels = 0:1))
   TP <- cm["1","1"]; TN <- cm["0","0"]; FP <- cm["1","0"]; FN <- cm["0","1"]
   c(Sensitivity = TP/(TP+FN), Specificity = TN/(TN+FP), Misclassification = (FP+FN)/sum(cm))
 })
-
 perf_data <- as.data.frame(t(perf_data))
 perf_data$threshold <- thresholds
-
 perf_data_long <- perf_data %>% pivot_longer(-threshold, names_to = "metric", values_to = "value")
-
-write_parquet(perf_data_long, "perf_data_long.parquet")
-
+# Save Metric Values for each Threshold
+write_parquet(perf_data_long, here("data/02-analysis_data/perf_data_long.parquet"))
+# Performance metric lineplot
 ggplot(perf_data_long, aes(threshold, value, color = metric)) +
   geom_line(size = 0.5) +
   labs(x = "Threshold", y = "Metric value", color = "Metric",
        title = "Performance Metrics vs. Threshold") +
   theme_minimal()
 
-threshold = 0.23
-pred_labels <- ifelse(pred_probs > threshold, 1, 0) 
+# Optimal threshold metric values
+optim_threshold = 0.23
+pred_labels <- ifelse(pred_probs > optim_threshold, 1, 0) 
 conf_matrix <- table(Predicted = pred_labels, Actual = test_data$killing_indicator) 
 conf_matrix[2,2] / (conf_matrix[2,2] + conf_matrix[1,2]) # Sensitivity
 conf_matrix[1,1] / (conf_matrix[1,1] + conf_matrix[2,1]) # Specificity

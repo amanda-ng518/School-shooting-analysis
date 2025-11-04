@@ -6,11 +6,12 @@ library(dplyr)
 library(arrow)
 library(knitr)
 library(stringr)
+library(here)
 
 # -----------------------------------------------------------
 # 2. Read in the data 
 # -----------------------------------------------------------
-data = read_parquet("school-shootings-data.parquet")
+data = read_parquet(here("data/00-raw_data/school-shootings-data.parquet"))
 
 # Number of observation
 nrow(data)
@@ -19,7 +20,7 @@ nrow(data)
 ncol(data)
 
 # -----------------------------------------------------------
-# 3. Data Cleaning
+# 3. Basic Cleaning
 # -----------------------------------------------------------
 # Change all blank string into NA
 data <- data %>%
@@ -52,7 +53,6 @@ data <- data %>%
     shooting_type = if_else(is.na(shooting_type), "unclear", shooting_type), 
     shooting_type = str_to_title(shooting_type)   # pretty capitalization
   )
-
 unique(data$shooting_type)
 
 # Shooter 1 relationship
@@ -74,7 +74,6 @@ unique(data$shooter_relationship1)
 data <- data %>% filter(gender_shooter1 == "m"|gender_shooter1 == "f"| is.na(gender_shooter1)) # exclude single observation with "h"
 
 # Rename categorical variables value
-
 data <- data%>%mutate(
   gender_shooter1 = case_when(gender_shooter1 == "m" ~ "Male",
                               gender_shooter1 == "f" ~ "Female"),
@@ -83,15 +82,17 @@ data <- data%>%mutate(
 )
 
 
-# Transform back to integer representation
+# Transform numerical variables back to integer representation
 data$lunch <- as.integer(gsub(",", "", data$lunch))
 data$enrollment <- as.integer(gsub(",", "", data$enrollment))
 data$white <- as.integer(gsub(",", "", data$white))
 
 # Lunch
-data <- data %>% filter(lunch <= enrollment| is.na(lunch)) # exclude 3 obs with lunch>enrollment
+data <- data %>% filter(lunch <= enrollment| is.na(lunch)) # exclude 3 obs with lunch > enrollment
 
-#--------------Missing values------------------#
+# -----------------------------------------------------------
+# 4. Examine Missing Values
+# -----------------------------------------------------------
 # Examine relevant variables
 # Exclude id, geographical and temporal variables
 # Exclude low grade, high grade of the school offers, staffing 
@@ -134,7 +135,7 @@ missing_table$Variable <- new_names[missing_table$Variable]
 
 missing_table <- subset(missing_table, Count > 0)
 
-write_parquet(missing_table, "missing_table.parquet")
+write_parquet(missing_table, here("data/02-analysis_data/missing_table.parquet"))
 
 kable(missing_table, col.names = c("Variable", "Missing Count", "Missing Proportion (%)"), 
       align = c("l", "r", "r"),
@@ -144,9 +145,11 @@ kable(missing_table, col.names = c("Variable", "Missing Count", "Missing Proport
 # Almost 45% observations have a missing resource_officer information -> hard to impute
 # More than 40% observations have missing weapon information -> hard to impute and too specific
 # More than 75% observations have missing weapon source information -> hard to impute and too specific
-# 130 obs with missing shooter age
+# 130 obs with missing shooter 1 age
 
-#------------------Impute data--------------------#
+# -----------------------------------------------------------
+# 5. Impute Missing Data
+# -----------------------------------------------------------
 
 # --- 1. Impute age_shooter1 ---
 data <- data %>%
@@ -232,18 +235,22 @@ data <- data %>%
   ) %>%
   select(-mean_white_prop_shooting, -mean_white_prop_state, -mean_white_prop_type)
 
-#--------------Create new variables-------------------#
+# -----------------------------------------------------------
+# 6. Create New Variables
+# -----------------------------------------------------------
 data <- data %>%mutate(
-    killing_indicator = as.factor(if_else(killed > 0, 1L, 0L)),
-    injured_indicator = as.factor(if_else(injured > 0, 1L, 0L)),
+    killing_indicator = as.factor(if_else(killed > 0, 1L, 0L)), # 1 if at least one killing occurred
+    injured_indicator = as.factor(if_else(injured > 0, 1L, 0L)), # 1 if at least one injury occurred
     lunch_prop = lunch / enrollment,
     non_white_prop = 1 - white / enrollment
   )
 
-#------------Dataset for analysis-----------#
+# -----------------------------------------------------------
+# 7. Data for Analysis
+# -----------------------------------------------------------
 shootings <- data%>%select(killing_indicator, injured_indicator, school_type, shooting_type, 
                            age_shooter1,gender_shooter1, shooter_relationship1,
                            non_white_prop, lunch_prop)
 
 # Save dataset
-write_parquet(shootings, "shootings_cleaned.parquet")
+write_parquet(shootings, here("data/01-cleaned_data/shootings_cleaned.parquet"))
