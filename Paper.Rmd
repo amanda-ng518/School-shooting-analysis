@@ -348,17 +348,9 @@ Figure \@ref(fig:fig5) illustrates that over 60% of fatal cases did not involve 
 
 ## Model description
 
-In this study, we employed a logistic regression model to predict the likelihood of a student dropping out after their first year. Logistic regression is a statistical method that models the relationship between a binary
-outcome variable and a set of predictor variables. The outcome variable in our models is the logit of the fatal probability.  In our study, the logit refers to the natural logarithm of “ratio of the probability of at least one killing occurred to the probability of no killing occurred”. The predictors include whether injured occurred, school type, shooting type, shooter's age, shooter's gender, shooter's relationship to school community, proportion of non-white students, and proportion of students eligible for subsidized lunch.
+In this study, we employed a logistic regression model to predict the likelihood of a school shooting resulting in at least one fatality. Logistic regression is a statistical method that models the relationship between a binary outcome variable and a set of predictor variables. The outcome variable in our model is the logit of the fatal probability. In this context, the logit refers to the natural logarithm of the ratio of the probability that at least one killing occurred to the probability that no killing occurred. The predictors include whether injuries occurred, school type, shooting type, shooter’s age, shooter’s gender, shooter’s relationship to the school community, the proportion of non-white students, and the proportion of students eligible for subsidized lunch.
 
-We set the reference level of: 
-
-- School type as "Private" 
-- Shooting type as "Unclear"
-- Shooter's gender as "Female"
-- Shooter's relationship with school community as "Other/Unknown/No relationship"
-
-Below is the model equation:
+We set the following reference levels: school type as "private", shooting type as "unclear", shooter's gender as "female", and shooter's relationship with school community as "other/unknown/no relationship". The model equation is:
 
 $$
 \begin{aligned}
@@ -379,28 +371,27 @@ $$
 
 where
 
-- $i$ represent the $i$th incident
-- $p_i$ represents the probability of the $i$th incident involving at least one killing excluding the shooter
+- $i$ denotes the $i$th incident
+- $p_i$ represents the probability that the  $i$th incident involved at least one killing, excluding the shooter
 
 ## Model assumptions
 
-The logistic regression model relies on 5 key assumptions:
+The logistic regression model relies on five key assumptions:
 
 1. **Binary Dependent Variable**: 
-The dependent variable in logistic regression must be binary, meaning it takes on only two possible outcomes. In our case, the dependent variable is the killing indicator, which indicates whether a killing occurred (1) or not (0). This assumption is satisfied as the response variable is binary by design.
+The dependent variable in logistic regression must be binary, meaning it takes on only two possible outcomes. In our case, the dependent variable is the killing indicator, which specifies whether a killing occurred (1) or not (0). This assumption is satisfied, as the response variable is binary by design.
 
 2. **Independence of Observations**: 
 Logistic regression assumes that the observations are independent of one another. This assumption is satisfied since each observation in our dataset corresponds to an independent shooting incident.
 
 3. **No Multicollinearity**: 
-Logistic regression assumes that there is little or no multicollinearity among the independent variables. This means that the predictors should not be highly correlated with one another, as high correlation can make it difficult to separate out the individual effects of each predictor on the dependent variable. To verify this assumption, we calculated VIF values for each predictor in each model. A VIF value below 5 indicates no significant multicollinearity in our model. Should any predictor exhibit a VIF value exceeding 5, we address multicollinearity by removing the predictor with the highest VIF and constructing a reduced model. Fortunately, multicollinearity check showed that all VIF values are below 5, indicating no severe issue is observed in any of the predictors in our model.
+Logistic regression assumes that there is little or no multicollinearity among the independent variables. This means that the predictors should not be highly correlated with one another, as high correlation can make it difficult to separate out the individual effects of each predictor on the dependent variable. To verify this assumption, we calculated VIF values for each predictor in each model. A VIF value below 5 indicates no significant multicollinearity. Should any predictor exhibit a VIF value exceeding 5, we address multicollinearity by removing the predictor with the highest VIF and constructing a reduced model. Fortunately, the multicollinearity check showed that all VIF values were below 5, indicating no severe issues in any of the predictors.
 
 4. **Linearity of Independent Variables and Log Odds**: 
-Logistic regression assumes a linear relationship between the independent variables and the log odds of the dependent variable. To check for this assumption, we identify if there are systematic non-linear patterns using the "deviance residual vs fitted" plot. 
-Despite the slight curvatures in the residuals, we observe no significant non-linear pattern observed in any of the model residual plots. Hence, we may assume that the linear requirement is satisfied in the model.
+Logistic regression assumes a linear relationship between the independent variables and the log odds of the dependent variable. To check this assumption, we examined “deviance residual vs. fitted” plots for systematic non-linear patterns. Despite slight curvatures in the residuals, no significant non-linear patterns were observed in any of the model residual plots. Hence, we assume that the linearity requirement is satisfied.
 
 5. **No Overdispersion**: 
-Overdispersion occurs when the variance of the outcome variable is greater than what the logistic regression model assumes. This implies that the model underestimates the true variance of the model parameter estimates, leading to incorrect standard errors and inflated Type 1 error. We check for overdispersion by examining the Pearson chi-squared statistic. A statistic which is significantly greater than 1 indicates overdispersion. If overdispersion is present, we might consider using alternative methods, such as quasi-binomial regression, which accounts for overdispersion. Fortunately, Pearson chi-squared statistic is close to 1, indicating no severe issue is observed in any of the model.
+Overdispersion occurs when the variance of the outcome variable is greater than what the logistic regression model assumes. This implies that the model underestimates the true variance of the parameter estimates, leading to incorrect standard errors and inflated Type I error. We checked for overdispersion by examining the Pearson chi-squared statistic. A statistic significantly greater than 1 indicates overdispersion. If overdispersion were present, we would consider alternative methods, such as quasi-binomial regression, which accounts for overdispersion. Fortunately, the Pearson chi-squared statistic was close to 1, indicating no severe issues in the model.
 
 ## Justification
 
