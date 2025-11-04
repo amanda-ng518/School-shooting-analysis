@@ -73,58 +73,58 @@ write_parquet(num_summary_no, "data/02-analysis_data/num_summary_no.parquet")
 ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
-    title = "Distribution of Shooter Age by Killing Indicator",
+    title = "Distribution of Shooter Age by Killing Occurrence",
     x = "Shooter age",
     y = "Frequency"
   ) +
   scale_fill_manual(values = c("0" = "blue", "1" = "red"),
                     labels = c("No", "Yes")) +
   guides(fill = guide_legend(title = "Killing Occured")) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(size = 10),
-        axis.title.x =element_text(size = 12),
-        axis.title.y =element_text(size = 12),
-        plot.title = element_text(size = 16),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12))
+  theme_minimal() + 
+  theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
 
 # Proportion of Non-white student histogram
 ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
-    title = "Distribution of Proportion of Non-white student by Killing Indicator",
+    title = "Distribution of Proportion of Non-white student by Killing Occurrence",
     x = "Proportion of Non-white student",
     y = "Frequency"
   ) +
   scale_fill_manual(values = c("0" = "blue", "1" = "red"),
                     labels = c("No", "Yes")) +
   guides(fill = guide_legend(title = "Killing Occured")) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(size = 10),
-        axis.title.x =element_text(size = 12),
-        axis.title.y =element_text(size = 12),
-        plot.title = element_text(size = 16),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12))
+  theme_minimal() + 
+  theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
 
 # Proportion of lunch distribution histogram
 ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
-    title = "Distribution of Proportion of Students Eligible for Subsizied Lunch by Killing Indicator",
-    x = "Proportion of Students Eligible for Subsizied Lunch",
+    title = "Distribution of Proportion of Students Eligible for Subsidized Lunch by Killing Occurrence",
+    x = "Proportion of Students Eligible for Subsidized Lunch",
     y = "Frequency"
   ) +
   scale_fill_manual(values = c("0" = "blue", "1" = "red"),
                     labels = c("No", "Yes")) +
   guides(fill = guide_legend(title = "Killing Occured")) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(size = 10),
-        axis.title.x =element_text(size = 12),
-        axis.title.y =element_text(size = 12),
-        plot.title = element_text(size = 16),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12))
+  theme_minimal() + 
+  theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
 
 # -----------------------------------------------------------
 # 5. Categorical variables summary
@@ -164,12 +164,12 @@ ggplot(shooting_type_combined_data, aes(x = shooting_type, y = shooting_type_per
   ) +
   scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
   theme_minimal()+ 
-  theme(axis.text.x = element_text(size = 10,angle = 45, hjust = 1),
-        axis.title.x =element_text(size = 12),
-        axis.title.y =element_text(size = 12),
-        plot.title = element_text(size = 14),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12))
+  theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
 
 # School Type
 # Summarize percentages for each categories
@@ -196,12 +196,12 @@ ggplot(school_type_combined_data, aes(x = school_type, y = school_type_percent, 
   ) +
   scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
   theme_minimal()+ 
-  theme(axis.text.x = element_text(size = 10),
-        axis.title.x =element_text(size = 12),
-        axis.title.y =element_text(size = 12),
-        plot.title = element_text(size = 16),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12))
+  theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
 
 # Shooter gender
 # Summarize percentages for each categories
@@ -228,12 +228,12 @@ ggplot(gender_combined_data, aes(x = gender_shooter1, y = gender_percent, fill =
   ) +
   scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
   theme_minimal()+ 
-  theme(axis.text.x = element_text(size = 10),
-        axis.title.x =element_text(size = 12),
-        axis.title.y =element_text(size = 12),
-        plot.title = element_text(size = 16),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12))
+  theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
 
 # shooter_relationship1
 # Summarize percentages for each categories
@@ -260,12 +260,12 @@ ggplot(shooter_relationship_combined_data, aes(x = shooter_relationship1, y = sh
   ) +
   scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
   theme_minimal()+ 
-  theme(axis.text.x = element_text(size = 8,angle = 45, hjust = 1),
-        axis.title.x =element_text(size = 12),
-        axis.title.y =element_text(size = 12),
-        plot.title = element_text(size = 16),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12))
+  theme(axis.text.x = element_text(size = 7,angle = 45, hjust = 1),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
 
 # injured_indicator
 # Summarize percentages for each categories
@@ -298,10 +298,10 @@ ggplot(injured_combined_data, aes(x = injured_indicator, y = injured_percent, fi
   ) +
   scale_fill_manual(values = c("No" = "blue", "Yes" = "red")) +
   theme_minimal()+ 
-  theme(axis.text.x = element_text(size = 10),
-        axis.title.x =element_text(size = 12),
-        axis.title.y =element_text(size = 12),
-        plot.title = element_text(size = 16),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12))
+  theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
 
