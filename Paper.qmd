@@ -6,9 +6,13 @@ thanks: "Code and data are available at: [https://github.com/washingtonpost/data
 date: today
 date-format: long
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
-format: pdf
+format: 
+  pdf:
+    include-in-header:
+        text: |
+          \usepackage{float}
 number-sections: true
-toc: true
+toc: false
 bibliography: "references.bib"
 ---
 
@@ -174,6 +178,7 @@ kable(num_summary_no, caption = "Shootings Without Killing Occured", digits = 2)
 #| fig.width: 8
 #| fig.height: 3.25
 #| fig.align: 'center'
+#| fig-pos: 'H'
 
 # Shooting Type
 # Summarize percentages for each categories
@@ -223,7 +228,7 @@ ggplot(shooting_type_combined_data, aes(x = shooting_type, y = shooting_type_per
 #| fig.width: 8
 #| fig.height: 3.25
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 # School Type
 # Summarize percentages for each categories
 school_type_yes <- killing_yes_data %>%
@@ -269,7 +274,7 @@ ggplot(school_type_combined_data, aes(x = school_type, y = school_type_percent, 
 #| fig.width: 8
 #| fig.height: 3.25
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 # Shooter gender
 # Summarize percentages for each categories
 gender_yes <- killing_yes_data %>%
@@ -318,7 +323,7 @@ ggplot(gender_combined_data, aes(x = gender_shooter1, y = gender_percent, fill =
 #| fig.width: 8
 #| fig.height: 3.25
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 # shooter_relationship1
 # Summarize percentages for each categories
 shooter_relationship_yes <- killing_yes_data %>%
@@ -361,7 +366,7 @@ ggplot(shooter_relationship_combined_data, aes(x = shooter_relationship1, y = sh
 #| fig.width: 8
 #| fig.height: 3.25
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 # injured_indicator
 # Summarize percentages for each categories
 injured_yes <- killing_yes_data %>%
@@ -470,12 +475,7 @@ Model performance was assessed across a range of probability thresholds using se
 
 ## Statistical Software
 
-All statistical analyses were conducted in R version 4.3.0 [@R]. We relied on several R packages to support data cleaning, modeling, and visualization, including
-
--   arrow [@arrow], tidyr [@tidyr], dplyr [@dplyr], knitr [@knitr], stringr [@stringr], broom [@broom], here [@here] for data manipulation
--   car [@car] for model diagnostics
--   pROC [@pROC] for model evaluation
--   ggplot2 [@ggplot2], kableExtra [@kableExtra] for data visualization and tables.
+All statistical analyses were conducted in R version 4.3.0 [@R]. We relied on several R packages to support data cleaning, modeling, and visualization, including: arrow [@arrow], tidyr [@tidyr], dplyr [@dplyr], knitr [@knitr], stringr [@stringr], broom [@broom], here [@here] for data manipulation, car [@car] for model diagnostics, pROC [@pROC] for model evaluation and ggplot2 [@ggplot2], kableExtra [@kableExtra] for data visualization and generating tables.
 
 # Results {#sec-results}
 
@@ -512,7 +512,7 @@ We conducted a Likelihood Ratio Test to assess the overall significance of the m
 #| fig.width: 8
 #| fig.height: 4
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 roc_data = read_parquet(here("data/02-analysis_data/roc_data.parquet"))
 auc_value <- unique(roc_data$AUC) 
 
@@ -552,7 +552,7 @@ Below is a figure summarizing sensitivity, specificity, and misclassification ra
 #| fig.width: 8
 #| fig.height: 4
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 perf_data_long = read_parquet(here("data/02-analysis_data/perf_data_long.parquet"))
 ggplot(perf_data_long, aes(threshold, value, color = metric)) +
   geom_line(linewidth = 0.5) +
@@ -666,7 +666,7 @@ Lastly, further validation is necessary to assess the model’s generalizability
 #| fig.width: 8
 #| fig.height: 3.25
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
@@ -693,7 +693,7 @@ ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
 #| fig.width: 8
 #| fig.height: 3.25
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
@@ -720,7 +720,7 @@ ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
 #| fig.width: 8
 #| fig.height: 3.25
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
@@ -749,7 +749,7 @@ ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
 #| fig.width: 8
 #| fig.height: 3.25
 #| fig.align: 'center'
-
+#| fig-pos: 'H'
 model = readRDS(here("models/logistic_regression_model.rds"))
 
 # Create a data frame with fitted values and deviance residuals
@@ -775,3 +775,6 @@ ggplot(residuals_df, aes(x = fitted, y = residuals)) +
         legend.text = element_text(size = 7),
         legend.title = element_text(size = 8))
 ```
+
+\newpage
+# Reference
