@@ -2,7 +2,7 @@
 title: "Fatal US School Shootings Are More Likely in Targeted and Multi-Victim Events"
 subtitle: "Evidence from Logistic Regression on Contextual Factors"
 author: "Amanda Ng"
-thanks: "Code and data are available at: [https://github.com/washingtonpost/data-school-shootings](https://github.com/washingtonpost/data-school-shootings)."
+thanks: "Code and data are available at: [https://github.com/amanda-ng518/School-shooting-analysis](https://github.com/amanda-ng518/School-shooting-analysis)."
 date: today
 date-format: long
 abstract: "School shootings in the United States vary in fatality, ... This analysis uses logistic regression on data from The Washington Post School Shootings Database to model the probability that a shooting results in at least one death. Findings indicate that incidents involving targeted or indiscriminate intent, no non-shooter injuries, and shooters connected to the school community are more likely to be fatal. These results highlight the need for proactive safety measures focused on behavioral monitoring, threat assessment, and emergency preparedness."
