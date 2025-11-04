@@ -587,6 +587,93 @@ Lastly, further validation is necessary to assess the model’s generalizability
 
 ## Additional summary plots
 
-## Model assumption diagnostic plots
+```{r fig8, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Distribution of Shooter Age by Killing Occurrence. Bars represent the distribution of shooter ages for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'}
+ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
+  geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
+  labs(
+    title = "Distribution of Shooter Age by Killing Occurrence",
+    x = "Shooter age",
+    y = "Frequency"
+  ) +
+  scale_fill_manual(values = c("0" = "blue", "1" = "red"),
+                    labels = c("No", "Yes")) +
+  guides(fill = guide_legend(title = "Killing Occured")) +
+  theme_minimal() + 
+    theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+```
+
+```{r fig9, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Distribution of Proportion of Non-white student by Killing Occurrence. Bars represent the distribution of proportion of non-white students for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'}
+ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
+  geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
+  labs(
+    title = "Distribution of Proportion of Non-white student by Killing Occurrence",
+    x = "Proportion of Non-white student",
+    y = "Frequency"
+  ) +
+  scale_fill_manual(values = c("0" = "blue", "1" = "red"),
+                    labels = c("No", "Yes")) +
+  guides(fill = guide_legend(title = "Killing Occured")) +
+  theme_minimal() + 
+    theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+```
+
+```{r fig10, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Distribution of Proportion of Students Eligible for Subsidized Lunch by Killing Occurrence. Bars represent the distribution of proportion of students eligible for subsidized for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'}
+ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
+  geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
+  labs(
+    title = "Distribution of Proportion of Students Eligible for Subsidized Lunch by Killing Occurrence",
+    x = "Proportion of Students Eligible for Subsidized Lunch",
+    y = "Frequency"
+  ) +
+  scale_fill_manual(values = c("0" = "blue", "1" = "red"),
+                    labels = c("No", "Yes")) +
+  guides(fill = guide_legend(title = "Killing Occured")) +
+  theme_minimal() + 
+    theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+```
+
+## Model assumption diagnostics plot
+
+```{r fig11, echo = FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Deviance residuals plotted against fitted values from the logistic regression model. The horizontal dashed red line at zero provides a reference for assessing systematic patterns in the residuals. Random scatter around zero or linear pattern suggests an adequate model fit, whereas visible non-linear structure may indicate model misspecification.'}
+model = readRDS("models/logistic_regression_model.rds")
+
+# Create a data frame with fitted values and deviance residuals
+residuals_df <- data.frame(
+  fitted = model$fitted.values,
+  residuals = residuals(model, type = "deviance")
+)
+
+# Plot with ggplot2
+ggplot(residuals_df, aes(x = fitted, y = residuals)) +
+  geom_point(alpha = 0.6) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    x = "Fitted values",
+    y = "Deviance residuals",
+    title = "Deviance Residuals vs Fitted Values"
+  ) +
+  theme_minimal()+ 
+    theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+```
 
 # Reference
