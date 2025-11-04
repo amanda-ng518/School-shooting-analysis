@@ -1,17 +1,22 @@
 ---
-title: "Fatal US School Shootings Are More Likely in Targeted and Multi-Victim Events: Evidence from Logistic Regression on Contextual Factors"
+title: "Fatal US School Shootings Are More Likely in Targeted and Multi-Victim Events"
+subtitle: "Evidence from Logistic Regression on Contextual Factors"
 author: "Amanda Ng"
-date: "`r format(Sys.Date(), '%B %d, %Y')`"
-abstract: "This is abstract"
-output: 
-  bookdown::pdf_document2:
-    latex_engine: xelatex
-    citation_package: natbib
-    toc: false
+thanks: "Code and data are available at: [https://github.com/washingtonpost/data-school-shootings]https://github.com/washingtonpost/data-school-shootings)."
+date: today
+date-format: long
+abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+format: pdf
+number-sections: true
+toc: true
 bibliography: "references.bib"
 ---
 
-```{r, include=FALSE}
+```{r setup}
+#| include: false
+#| warning: false
+#| message: false
+
 # Load packages
 library(here)
 library(tidyr)
@@ -34,7 +39,7 @@ The analysis draws on The Washington Post School Shootings Database [@data], whi
 
 Results show that school shootings with no non-shooter injuries, classified as targeted or indiscriminate, and involve shooters with some connection to the school community were more likely to result in fatalities. These patterns suggest that fatal school shootings often involve a higher degree of planning, precision, and familiarity with the school environment, resulting in more deliberate and focused attacks. Such findings underscore the importance of preventive strategies such as internal behavioral monitoring of students and staff, robust threat assessment protocols, enhanced communication with law enforcement, and comprehensive emergency preparedness training. Understanding these factors can guide interventions aimed at reducing fatalities and improving overall school safety.
 
-The paper is structured as follows, Section \@ref(sec-data) describes the data source, alongside the cleaning and preparation of the dataset for analysis. A summary of key variables and exploratory data visualizations is also presented. Section \@ref(sec-model) explains the logistic regression approach used to analyze the relationship between fatality likelihood and contextual characteristics, along with justifications for the model design. Section \@ref(sec-results) interprets the effects of predictors and the practical applicability of the model in terms of performance metrics. Section \@ref(sec-discussion) summarizes the main findings, limitations of the current study, and outlines directions for future studies. Supporting information, including details of the full dataset and additional plots, is provided in Section \@ref(sec-appendix).
+The paper is structured as follows, @sec-data describes the data source, alongside the cleaning and preparation of the dataset for analysis. A summary of key variables and exploratory data visualizations is also presented. @sec-model explains the logistic regression approach used to analyze the relationship between fatality likelihood and contextual characteristics, along with justifications for the model design. @sec-results interprets the effects of predictors and the practical applicability of the model in terms of performance metrics. @sec-discussion summarizes the main findings, limitations of the current study, and outlines directions for future studies. Supporting information, including details of the full dataset and additional plots, is provided in @sec-appendix.
 
 # Data {#sec-data}
 
@@ -44,7 +49,7 @@ The study draws on The Washington Post School Shootings Database [@data], a syst
 
 ## Data overview
 
-The raw data consist of 428 recorded school shooting incidents in the United States, spanning the period from April 20, 1999, onward. Each observation represents a distinct shooting incident, and the dataset contains 50 variables. These variables include temporal and geographical information about the shooting incident; the demographic characteristics of the shooter(s); the shooter(s)’ relationship to the school community; shooting type; shooting outcomes (number of killings and injuries); weapon used and its source; school type; number of students at the school (total enrollment and by racial groups); number of students eligible to receive a free or reduced-price lunch; presence of a school resource officer; and grade levels offered by the school. The dataset records a maximum of two shooters per incident. Every incident has at least one shooter, and details for a second shooter are included only if applicable. The full list of variables can be found in Section \@ref(sec-appendix).
+The raw data consist of 428 recorded school shooting incidents in the United States, spanning the period from April 20, 1999, onward. Each observation represents a distinct shooting incident, and the dataset contains 50 variables. These variables include temporal and geographical information about the shooting incident; the demographic characteristics of the shooter(s); the shooter(s)’ relationship to the school community; shooting type; shooting outcomes (number of killings and injuries); weapon used and its source; school type; number of students at the school (total enrollment and by racial groups); number of students eligible to receive a free or reduced-price lunch; presence of a school resource officer; and grade levels offered by the school. The dataset records a maximum of two shooters per incident. Every incident has at least one shooter, and details for a second shooter are included only if applicable. The full list of variables can be found in @sec-appendix.
 
 ## Data cleaning
 
@@ -56,13 +61,16 @@ One observation had shooter 1's gender recorded as “h”, which was presumed t
 
 Below is a summary of the (non-zero) count and proportion of missing values in our variables of interest after basic cleaning.
 
-```{r Table1, echo=FALSE}
+```{r}
+#| label: tbl-Table1
+#| echo: false
+
 missing_table = read_parquet(here("data/02-analysis_data/missing_table.parquet"))
 kable(missing_table, col.names = c("Variable", "Missing Count", "Missing Proportion (%)"), 
       caption = "Summary of Missing Values in Interested Variables")
 ```
 
-According to Table \@ref(tab:Table1), more than 97% of incidents did not involve a second shooter, indicating that the vast majority of incidents were perpetrated by a single individual. The variables "presence of a resource officer", "weapon used", and "source of the weapon" contain missing values for over 40% of the observations. The high proportion of missing values, combined with the lack of specificity in weapon-related variables, makes reliable imputation impractical. Therefore, in the following analysis, we excluded all information related to a second shooter, as well as the presence of a resource officer and weapons.
+According to @tbl-Table1, more than 97% of incidents did not involve a second shooter, indicating that the vast majority of incidents were perpetrated by a single individual. The variables "presence of a resource officer", "weapon used", and "source of the weapon" contain missing values for over 40% of the observations. The high proportion of missing values, combined with the lack of specificity in weapon-related variables, makes reliable imputation impractical. Therefore, in the following analysis, we excluded all information related to a second shooter, as well as the presence of a resource officer and weapons.
 
 For shooter 1's age, missing values were imputed by the mean age within the same shooting type and state, with state or overall means used as fallbacks. Shooter 1's gender was imputed probabilistically based on the observed state-level gender proportions, preserving the underlying shooter gender distribution in the data. No fallback was needed here since male shooter proportions were available in all states. For the number of students eligible for free or reduced-price lunch, we first set all private schools to zero, as such programs typically apply only to public schools. For public schools, missing values were imputed using the average lunch proportion within each state, with the overall proportion used as a fallback. The imputed value was then scaled by the school’s total enrollment. Finally, missing counts of white students were imputed using the mean proportion of white students within each combination of shooting type, state, and school type, and multiplied by the school’s total enrollment. Means at the state–school type level and the school type level were used as fallbacks.
 
@@ -72,7 +80,9 @@ We collapsed the number of killings and injuries variables into binary indicator
 
 The cleaned dataset consists of 424 observations and 9 variables. A summary description of all variables in the cleaned dataset is provided below.
 
-```{r Table2, echo=FALSE}
+```{r}
+#| label: tbl-Table2
+#| echo: false
 # Create a data frame
 data_description <- data.frame(
   Variable = c(
@@ -120,19 +130,21 @@ kable(data_description,
 
 ```
 
-
 ## Data summary and visualizations {#sec-datasummary}
 
 In total, the dataset includes 424 shooting incidents. Among them, 326 cases involved no killings, while 98 cases resulted in at least one killing. This distribution indicates that the majority of school shootings (approximately 77%) did not involve any death excluding the shooter.
 
-```{r, include = FALSE}
+```{r}
+#| include: false
 killing_yes_data = shootings%>%filter(killing_indicator == 1)
 n_yes = nrow(killing_yes_data)
 killing_no_data = shootings%>%filter(killing_indicator == 0)
 n_no = nrow(killing_no_data)
 ```
 
-```{r Table3, echo=FALSE}
+```{r}
+#| label: tbl-Table3
+#| echo: false
 num_summary_yes = read_parquet(here("data/02-analysis_data/num_summary_yes.parquet"))
 num_summary_no = read_parquet(here("data/02-analysis_data/num_summary_no.parquet"))
 
@@ -143,17 +155,26 @@ kable(num_summary_yes, caption = "Shootings With Killing Occured", digits = 2)%>
   column_spec(4, width = "5cm")
 ```
 
-```{r Table4, echo=FALSE}
+```{r}
+#| label: tbl-Table4
+#| echo: false
 kable(num_summary_no, caption = "Shootings Without Killing Occured", digits = 2)%>%
-  column_spec(1, width = "1cm")%>%
+  column_spec(1, width = "2cm")%>%
   column_spec(2, width = "2cm")%>%
   column_spec(3, width = "5cm")%>%
   column_spec(4, width = "5cm")
 ```
 
-Tables \@ref(tab:Table3) and \@ref(tab:Table4) show that shootings resulting in at least one killing were associated with a slightly older average shooter age, while non-fatal shootings occurred more often in schools with higher proportions of non-white students and students receiving subsidized lunch. These patterns suggest that these variables may influence the likelihood of a shooting being fatal. However, the substantial standard deviations in each numerical variable indicate considerable heterogeneity within each group, highlighting that these variables alone do not fully explain shooting outcomes. This heterogeneity should be kept in mind when interpreting the model results. Additional visualizations are provided in Section \@ref(sec-appendix).
+@tbl-Table3 and @tbl-Table4 show that shootings resulting in at least one killing were associated with a slightly older average shooter age, while non-fatal shootings occurred more often in schools with higher proportions of non-white students and students receiving subsidized lunch. These patterns suggest that these variables may influence the likelihood of a shooting being fatal. However, the substantial standard deviations in each numerical variable indicate considerable heterogeneity within each group, highlighting that these variables alone do not fully explain shooting outcomes. This heterogeneity should be kept in mind when interpreting the model results. Additional visualizations are provided in Section @sec-appendix.
 
-```{r fig1, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Percentage of Shooting cases by Shooting type (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on their shooting type, categorized into five groups: "Accidental", "Indiscriminate", "Suicide", "Targeted" and "Unclear". Each bar is labeled with both the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'}
+```{r}
+#| label: fig-fig1
+#| fig-cap: 'Percentage of Shooting cases by Shooting type (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on their shooting type, categorized into five groups: "Accidental", "Indiscriminate", "Suicide", "Targeted" and "Unclear". Each bar is labeled with both the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+
 # Shooting Type
 # Summarize percentages for each categories
 shooting_type_yes <- killing_yes_data %>%
@@ -193,9 +214,16 @@ ggplot(shooting_type_combined_data, aes(x = shooting_type, y = shooting_type_per
         legend.title = element_text(size = 8))
 ```
 
-Figure \@ref(fig:fig1) suggests that targeted shootings were the most common shooting type and were substantially more prevalent when killings occurred (65.3% in fatal shootings vs. 49.1% in non-fatal shootings), indicating a strong association between targeted intent and fatal outcomes. In contrast, accidental and unclear shootings were more frequent in non-fatal incidents, while indiscriminate shootings showed a moderate increase when killings occurred (19.4% vs. 11.4%). These patterns suggest that the nature of the shooting event may play a critical role in determining whether a killing occurs. Hence, shooting type should be considered a key predictor in the model to examine its contribution to the likelihood of a fatal outcome.
+@fig-fig1 suggests that targeted shootings were the most common shooting type and were substantially more prevalent when killings occurred (65.3% in fatal shootings vs. 49.1% in non-fatal shootings), indicating a strong association between targeted intent and fatal outcomes. In contrast, accidental and unclear shootings were more frequent in non-fatal incidents, while indiscriminate shootings showed a moderate increase when killings occurred (19.4% vs. 11.4%). These patterns suggest that the nature of the shooting event may play a critical role in determining whether a killing occurs. Hence, shooting type should be considered a key predictor in the model to examine its contribution to the likelihood of a fatal outcome.
 
-```{r fig2, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Percentage of Shooting cases by School type (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on their school type, categorized into two groups: "Private" and "Public". Each bar is labeled with both the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'}
+```{r}
+#| label: fig-fig2
+#| fig-cap: 'Percentage of Shooting cases by School type (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on their school type, categorized into two groups: "Private" and "Public". Each bar is labeled with both the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+
 # School Type
 # Summarize percentages for each categories
 school_type_yes <- killing_yes_data %>%
@@ -229,8 +257,19 @@ ggplot(school_type_combined_data, aes(x = school_type, y = school_type_percent, 
         legend.title = element_text(size = 8))
 ```
 
+```{r}
+#| label: fig-fig3
+#| fig-cap: >
+#|   Percentage of Shooting cases by Shooter Gender (Killing occurred vs. did not occur). 
+#|   This bar plot illustrates the distribution of all shooting cases based on the shooter's gender, 
+#|   categorized into two groups: "Female" and "Male". Each bar is labeled with both the corresponding 
+#|   percentage and the total counts in brackets within each category. Percentages belonging to 
+#|   the same group sum up to 100%.
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
 
-```{r fig3, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Percentage of Shooting cases by Shooter Gender (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on the shooter\'s gender, categorized into two groups: "Female" and "Male". Each bar is labeled with both the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'}
 # Shooter gender
 # Summarize percentages for each categories
 gender_yes <- killing_yes_data %>%
@@ -264,9 +303,22 @@ ggplot(gender_combined_data, aes(x = gender_shooter1, y = gender_percent, fill =
         legend.title = element_text(size = 8))
 ```
 
-Figures \@ref(fig:fig2) and \@ref(fig:fig3) suggest that the majority of both fatal and nonfatal school shooting incidents occurred in public schools, and shooters were predominantly male, accounting for more than 92% of all cases. The near-identical percentages between fatal and nonfatal incidents across these categories suggest that whether a shooting results in a fatality may not be strongly associated with whether the school is public or private or with the shooter’s gender. This pattern indicates that institutional classification and shooter gender alone may offer limited explanatory power for modeling fatal outcomes. Hence, additional contextual factors, such as the nature of the shooting, the presence of injuries, or the relationship between the shooter and the school, are needed to explain fatal outcomes in the model.
+@fig-fig2 and @fig-fig3 suggest that the majority of both fatal and nonfatal school shooting incidents occurred in public schools, and shooters were predominantly male, accounting for more than 92% of all cases. The near-identical percentages between fatal and nonfatal incidents across these categories suggest that whether a shooting results in a fatality may not be strongly associated with whether the school is public or private or with the shooter’s gender. This pattern indicates that institutional classification and shooter gender alone may offer limited explanatory power for modeling fatal outcomes. Hence, additional contextual factors, such as the nature of the shooting, the presence of injuries, or the relationship between the shooter and the school, are needed to explain fatal outcomes in the model.
 
-```{r fig4, echo=FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Percentage of Shooting cases by Shooter Relationship (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on the shooter\'s relationship with the school community, categorized into six groups: "Current Student", "Family/Guardian of Student", "Former Student", "Non-security Staff", "Police/Security", and "Other/Unknown/No Connection". Each bar is labeled with the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'}
+```{r}
+#| label: fig-fig4
+#| fig-cap: >
+#|   Percentage of Shooting cases by Shooter Relationship (Killing occurred vs. did not occur). 
+#|   This bar plot illustrates the distribution of all shooting cases based on the shooter's relationship 
+#|   with the school community, categorized into six groups: "Current Student", "Family/Guardian of Student", 
+#|   "Former Student", "Non-security Staff", "Police/Security", and "Other/Unknown/No Connection". 
+#|   Each bar is labeled with the corresponding percentage and the total counts in brackets within 
+#|   each category. Percentages belonging to the same group sum up to 100%.
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+
 # shooter_relationship1
 # Summarize percentages for each categories
 shooter_relationship_yes <- killing_yes_data %>%
@@ -300,9 +352,16 @@ ggplot(shooter_relationship_combined_data, aes(x = shooter_relationship1, y = sh
         legend.title = element_text(size = 8))
 ```
 
-Figure \@ref(fig:fig4) suggests that shooters who were current students accounted for nearly half of both fatal and nonfatal incidents, indicating that student-perpetrated shootings were the most frequent overall. Notably, the percentage of shootings carried out by individuals who were police or security personnel in fatal incidents was more than three times that in nonfatal incidents. This reflects that their access to weapons, firearms training, and the high-risk situations in which they are involved may put others at greater risk of death. Conversely, shootings committed by individuals with no known connection to the school were more common in nonfatal incidents (over 40%). These patterns suggest that the shooter’s relationship to the school strongly influences the likelihood of a fatal outcome, and we expect this variable to be a key predictor in the regression model.
+@fig-fig4 suggests that shooters who were current students accounted for nearly half of both fatal and nonfatal incidents, indicating that student-perpetrated shootings were the most frequent overall. Notably, the percentage of shootings carried out by individuals who were police or security personnel in fatal incidents was more than three times that in nonfatal incidents. This reflects that their access to weapons, firearms training, and the high-risk situations in which they are involved may put others at greater risk of death. Conversely, shootings committed by individuals with no known connection to the school were more common in nonfatal incidents (over 40%). These patterns suggest that the shooter’s relationship to the school strongly influences the likelihood of a fatal outcome, and we expect this variable to be a key predictor in the regression model.
 
-```{r fig5, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap='Percentage of Shooting cases by Injured Indicator (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on whether there were injuries excluding the shooter, categorized into six groups: "No injured", and "At least one injured". Each bar is labeled with the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'}
+```{r}
+#| label: fig-fig5
+#| fig-cap: 'Percentage of Shooting cases by Injured Indicator (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on whether there were injuries excluding the shooter, categorized into six groups: "No injured", and "At least one injured". Each bar is labeled with the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+
 # injured_indicator
 # Summarize percentages for each categories
 injured_yes <- killing_yes_data %>%
@@ -343,7 +402,7 @@ ggplot(injured_combined_data, aes(x = injured_indicator, y = injured_percent, fi
 
 ```
 
-Figure \@ref(fig:fig5) illustrates that over 60% of fatal cases did not involve additional non-shooter injuries, while the majority of non-fatal shootings involved at least one non-shooter injury. This contrast highlights that fatal shootings tend to be more targeted or severe, whereas non-fatal ones may reflect less lethal intent or lower accuracy. These descriptive patterns underscore the relevance of injury occurrence as a meaningful variable for modeling fatality risk in school shooting incidents.
+@fig-fig5 illustrates that over 60% of fatal cases did not involve additional non-shooter injuries, while the majority of non-fatal shootings involved at least one non-shooter injury. This contrast highlights that fatal shootings tend to be more targeted or severe, whereas non-fatal ones may reflect less lethal intent or lower accuracy. These descriptive patterns underscore the relevance of injury occurrence as a meaningful variable for modeling fatality risk in school shooting incidents.
 
 # Model {#sec-model}
 
@@ -372,39 +431,34 @@ $$
 
 where
 
-- $i$ denotes the $i$th incident
-- $p_i$ represents the probability that the  $i$th incident involved at least one killing, excluding the shooter
+-   $i$ denotes the $i$th incident
+-   $p_i$ represents the probability that the $i$th incident involved at least one killing, excluding the shooter
 
 ## Model assumptions
 
 The logistic regression model relies on five key assumptions:
 
-1. **Binary Dependent Variable**: 
-The dependent variable in logistic regression must be binary, meaning it takes on only two possible outcomes. In our case, the dependent variable is the killing indicator, which specifies whether a killing occurred (1) or not (0). This assumption is satisfied, as the response variable is binary by design.
+1.  **Binary Dependent Variable**: The dependent variable in logistic regression must be binary, meaning it takes on only two possible outcomes. In our case, the dependent variable is the killing indicator, which specifies whether a killing occurred (1) or not (0). This assumption is satisfied, as the response variable is binary by design.
 
-2. **Independence of Observations**: 
-Logistic regression assumes that the observations are independent of one another. This assumption is satisfied since each observation in our dataset corresponds to an independent shooting incident.
+2.  **Independence of Observations**: Logistic regression assumes that the observations are independent of one another. This assumption is satisfied since each observation in our dataset corresponds to an independent shooting incident.
 
-3. **No Multicollinearity**: 
-Logistic regression assumes that there is little or no multicollinearity among the independent variables. This means that the predictors should not be highly correlated with one another, as high correlation can make it difficult to separate out the individual effects of each predictor on the dependent variable. To verify this assumption, we calculated VIF values for each predictor in each model. A VIF value below 5 indicates no significant multicollinearity. Should any predictor exhibit a VIF value exceeding 5, we address multicollinearity by removing the predictor with the highest VIF and constructing a reduced model. Fortunately, the multicollinearity check showed that all VIF values were below 5, indicating no severe issues in any of the predictors.
+3.  **No Multicollinearity**: Logistic regression assumes that there is little or no multicollinearity among the independent variables. This means that the predictors should not be highly correlated with one another, as high correlation can make it difficult to separate out the individual effects of each predictor on the dependent variable. To verify this assumption, we calculated VIF values for each predictor in each model. A VIF value below 5 indicates no significant multicollinearity. Should any predictor exhibit a VIF value exceeding 5, we address multicollinearity by removing the predictor with the highest VIF and constructing a reduced model. Fortunately, the multicollinearity check showed that all VIF values were below 5, indicating no severe issues in any of the predictors.
 
-4. **Linearity of Independent Variables and Log Odds**: 
-Logistic regression assumes a linear relationship between the independent variables and the log odds of the dependent variable. To check this assumption, we examined “deviance residual vs. fitted” plots for systematic non-linear patterns. Despite slight curvatures in the residuals, no significant non-linear patterns were observed in any of the model residual plots. Hence, we assume that the linearity requirement is satisfied.
+4.  **Linearity of Independent Variables and Log Odds**: Logistic regression assumes a linear relationship between the independent variables and the log odds of the dependent variable. To check this assumption, we examined “deviance residual vs. fitted” plots for systematic non-linear patterns. Despite slight curvatures in the residuals, no significant non-linear patterns were observed in any of the model residual plots. Hence, we assume that the linearity requirement is satisfied.
 
-5. **No Overdispersion**: 
-Overdispersion occurs when the variance of the outcome variable is greater than what the logistic regression model assumes. This implies that the model underestimates the true variance of the parameter estimates, leading to incorrect standard errors and inflated Type I error. We checked for overdispersion by examining the Pearson chi-squared statistic. A statistic significantly greater than 1 indicates overdispersion. If overdispersion were present, we would consider alternative methods, such as quasi-binomial regression, which accounts for overdispersion. Fortunately, the Pearson chi-squared statistic was close to 1, indicating no severe issues in the model.
+5.  **No Overdispersion**: Overdispersion occurs when the variance of the outcome variable is greater than what the logistic regression model assumes. This implies that the model underestimates the true variance of the parameter estimates, leading to incorrect standard errors and inflated Type I error. We checked for overdispersion by examining the Pearson chi-squared statistic. A statistic significantly greater than 1 indicates overdispersion. If overdispersion were present, we would consider alternative methods, such as quasi-binomial regression, which accounts for overdispersion. Fortunately, the Pearson chi-squared statistic was close to 1, indicating no severe issues in the model.
 
 ## Justification
 
 Given that our response variable, the killing indicator, is binary, logistic regression is an appropriate modeling choice. Logistic regression models the outcome as the logit of the probability that a killing occurs, allowing us to predict fatality risk while accounting for multiple predictors. A key strength of logistic regression is interpretability: the beta coefficients represent the log odds of a killing occurring for a one-unit change in a predictor, holding all other variables constant. The odds reflect the ratio of the probability that a killing occurs to the probability that it does not, and the log odds are the natural logarithm of this ratio. Positive log odds indicate an increased likelihood of a killing, while negative log odds indicate a decreased likelihood, providing a straightforward way to assess each predictor’s impact on fatality risk in school shootings.
 
-Predictors were chosen to capture key contextual and demographic factors associated with the severity of school shooting outcomes (see \@ref(sec-datasummary)). Shooting type was included as a key predictor because it reflects the shooter’s intention. As shown in Figure \@ref(fig:fig1), shootings resulting in fatalities were more likely to be targeted rather than accidental or unclear. Including shooting type allows the model to examine whether planned and deliberate targeting is associated with fatal outcomes. The shooter’s relationship to the school community further captures intention and social proximity. Figure \@ref(fig:fig4) suggests that shooters with close ties to the school, such as current students or police and campus security, may commit targeted attacks arising from interpersonal conflicts. Including this variable helps assess whether familiarity with the school affects the likelihood of fatalities.
+Predictors were chosen to capture key contextual and demographic factors associated with the severity of school shooting outcomes (see @sec-datasummary). Shooting type was included as a key predictor because it reflects the shooter’s intention. As shown in @fig-fig1, shootings resulting in fatalities were more likely to be targeted rather than accidental or unclear. Including shooting type allows the model to examine whether planned and deliberate targeting is associated with fatal outcomes. The shooter’s relationship to the school community further captures intention and social proximity. @fig-fig4 suggests that shooters with close ties to the school, such as current students or police and campus security, may commit targeted attacks arising from interpersonal conflicts. Including this variable helps assess whether familiarity with the school affects the likelihood of fatalities.
 
 Shooter characteristics, including age and gender, were included to account for personal factors that may influence fatality risk. Age may capture maturity- or experience-related differences, while gender accounts for potential behavioral or psychological differences between males and females.
 
-The presence of non-shooter injuries was included as a binary indicator to capture whether any non-shooter was injured. This approach was chosen over modeling the number of injuries due to substantial skewness, as most incidents involved either no additional injuries or a single injury. Figure \@ref(fig:fig5) suggests that fatal shootings are less likely to involve non-shooter injuries, indicating that these incidents may be more deliberate and targeted. Including this variable allows us to formally test whether the presence of non-shooter injuries differentiates less severe shootings from those resulting in fatalities.
+The presence of non-shooter injuries was included as a binary indicator to capture whether any non-shooter was injured. This approach was chosen over modeling the number of injuries due to substantial skewness, as most incidents involved either no additional injuries or a single injury. @fig-fig5 suggests that fatal shootings are less likely to involve non-shooter injuries, indicating that these incidents may be more deliberate and targeted. Including this variable allows us to formally test whether the presence of non-shooter injuries differentiates less severe shootings from those resulting in fatalities.
 
-School type was retained in the model despite Figure \@ref(fig:fig2) showing little difference between groups, since it represents a structural characteristic of the educational environment and allows examination of whether institutional context, resource availability, or security infrastructure indirectly affect fatality risk in shootings.
+School type was retained in the model despite @fig-fig2 showing little difference between groups, since it represents a structural characteristic of the educational environment and allows examination of whether institutional context, resource availability, or security infrastructure indirectly affect fatality risk in shootings.
 
 Finally, the proportion of non-white students and the proportion of students eligible for subsidized lunch were included as measures of school racial and socioeconomic composition. These variables may reflect differences in students’ past exposure to community violence, which could influence their responses during a shooting and, indirectly, affect fatality risk.
 
@@ -416,29 +470,32 @@ Model performance was assessed across a range of probability thresholds using se
 
 ## Statistical Software
 
-All statistical analyses were conducted in R version 4.3.0 [@R]. We relied on several R packages to support data cleaning, modeling, and visualization, including 
+All statistical analyses were conducted in R version 4.3.0 [@R]. We relied on several R packages to support data cleaning, modeling, and visualization, including
 
-- arrow [@arrow], tidyr [@tidyr], dplyr [@dplyr], knitr[@knitr], stringr[@stringr], broom[@broom], here[@here] for data manipulation
-- car [@car] for model diagnostics
-- pROC[@pROC] for model evaluation
-- ggplot2 [@ggplot2], kableExtra[@kableExtra] for data visualization and tables. 
+-   arrow [@arrow], tidyr [@tidyr], dplyr [@dplyr], knitr [@knitr], stringr [@stringr], broom [@broom], here [@here] for data manipulation
+-   car [@car] for model diagnostics
+-   pROC [@pROC] for model evaluation
+-   ggplot2 [@ggplot2], kableExtra [@kableExtra] for data visualization and tables.
 
 # Results {#sec-results}
 
 ## Model Estimates and Hypothesis tests
 
 Below is a summary table of the coefficient estimates from the fitted logistic regression model. Positive coefficients indicate an increase in the log odds of a fatal outcome relative to the reference category, while negative coefficients indicate a decrease.
-```{r table5, echo=FALSE}
+
+```{r}
+#| label: tbl-Table5
+#| echo: false
 modelsummary <- read_parquet(here("data/02-analysis_data/modelsummary.parquet"))
 kable(modelsummary, caption = "Summary table of Model Coefficient Estimates")%>%
   column_spec(1, width = "4cm")
 ```
 
-**Interpretation**: 
+**Interpretation**:
 
 The fitted logistic regression model estimates the log-odds of a school shooting resulting in at least one fatality based on the incident context, shooter characteristics, and school-level demographics. The baseline category represents a shooting occurring in private schools that did not involve injuries, with a female shooter who was not affiliated with the school community and had unclear shooting intention.
 
-For all categorical variables, the exponentiated coefficients represent the odds ratio of killing occurrence in a school shooting between the indicator level and the reference level of the predictor. Holding all other predictors constant, shootings in which at least one person was injured were significantly less likely($p < 0.0001$) 
+For all categorical variables, the exponentiated coefficients represent the odds ratio of killing occurrence in a school shooting between the indicator level and the reference level of the predictor. Holding all other predictors constant, shootings in which at least one person was injured were significantly less likely($p < 0.0001$)
 
 to involve fatalities, suggesting that incidents resulting in injuries alone tend to be less severe or potentially interrupted before turning deadly. Compared to private schools, shootings in public schools were also less likely to involve fatalities. Relative to unclear shooting intention, targeted and indiscriminate shootings were more likely to result in fatalities with odds ratios greater than 2, whereas accidental and suicide-related shootings were less likely to result in fatalities. Note that suicide-related shootings yielded an extremely large negative estimate with high uncertainty, possibly due to very few such cases in the data. However, the differences between any categorical level and the reference level of school type and shooting type are statistically insignificant. Male shooters were not found to differ significantly from female shooters in fatality likelihood. Shooters who had some affiliation with the school community were more likely to commit fatal shootings compared to unaffiliated individuals, with police/security staff posing the highest risk, followed by non-security staff and current students. This difference is statistically significant for current students($p = 0.0152$) and marginal significant for police/security staff ($p = 0.0583$).
 
@@ -448,7 +505,14 @@ Overall, these results indicate that contextual factors of the shooting incident
 
 We conducted a Likelihood Ratio Test to assess the overall significance of the model, rejecting the null hypothesis that none of the covariates are linearly related to the log-odds of a killing occurring ($p = 5.078e-07 < 0.05$). This suggests that at least one predictor in the model is significantly associated with killing occurrence.
 
-```{r fig6, echo=FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Receiver operating characteristic (ROC) Curve for the logistic regression model. The ROC curve displays the diagnostic performance of the logistic regression model using shootings context-related predictors, with true positive rate plotted against false postive rate. The area under the curve (AUC) is 0.727.'}
+```{r}
+#| label: fig-fig6
+#| fig-cap: 'Receiver operating characteristic (ROC) Curve for the logistic regression model. The ROC curve displays the diagnostic performance of the logistic regression model using shootings context-related predictors, with true positive rate plotted against false postive rate. The area under the curve (AUC) is 0.727.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 4
+#| fig.align: 'center'
+
 roc_data = read_parquet(here("data/02-analysis_data/roc_data.parquet"))
 auc_value <- unique(roc_data$AUC) 
 
@@ -475,13 +539,20 @@ ggplot(roc_data, aes(x = FalsePositiveRate, y = TruePositiveRate)) +
 
 The area under the ROC curve is 0.727, indicating that the model has good discriminative ability to distinguish between shooting incidents that involved at least one killing and those that did not.
 
-## Sensitivity, Specificity, and Misclassification rates 
+## Sensitivity, Specificity, and Misclassification rates
 
 Sensitivity, specificity, and misclassification rate are key performance metrics used to evaluate the effectiveness of classification models. Sensitivity, also known as the true positive rate, measures the model’s ability to correctly identify shootings that actually resulted in killings. Specificity, on the other hand, is the true negative rate and represents the model’s capacity to correctly identify shootings that did not result in killings. The misclassification rate is the proportion of all predictions that are incorrect, combining both false positives and false negatives. A lower misclassification rate indicates better overall model accuracy, but it must be interpreted alongside sensitivity and specificity to fully understand the model’s strengths and weaknesses in identifying killing occurrence.
 
 Below is a figure summarizing sensitivity, specificity, and misclassification rates on the unseen testing data using different threshold values (i.e., the cut-off probability used to classify a shooting incident into the “killing occurred” group).
 
-```{r fig7, echo = FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Performance Metrics vs. Threshold for the logistic regression model. Each colored line represents the trend of the metric value as the threshold increases from 0 to 1. Red line represents missclassification rate, green line represents sentisivity and blue line represents specificity. '}
+```{r}
+#| label: fig-fig7
+#| fig-cap: 'Performance Metrics vs. Threshold for the logistic regression model. Each colored line represents the trend of the metric value as the threshold increases from 0 to 1. Red line represents missclassification rate, green line represents sentisivity and blue line represents specificity.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 4
+#| fig.align: 'center'
+
 perf_data_long = read_parquet(here("data/02-analysis_data/perf_data_long.parquet"))
 ggplot(perf_data_long, aes(threshold, value, color = metric)) +
   geom_line(linewidth = 0.5) +
@@ -515,7 +586,7 @@ These findings suggest that fatal school shootings may be more predictable when 
 
 ## Limitation
 
-As shown in Section \@ref(sec-datasummary), shooter’s age, the proportion of non-white students, and the proportion of students eligible for subsidized lunch exhibited high standard deviations within both fatal and non-fatal incident groups. This suggests that these variables alone may not fully capture the underlying characteristics that differentiate fatal from non-fatal shootings. There may be unobserved variables, such as local law enforcement response times or the shooter’s mental health history, influencing the likelihood of fatality that are not captured by the current model.
+As shown in @sec-datasummary, shooter’s age, the proportion of non-white students, and the proportion of students eligible for subsidized lunch exhibited high standard deviations within both fatal and non-fatal incident groups. This suggests that these variables alone may not fully capture the underlying characteristics that differentiate fatal from non-fatal shootings. There may be unobserved variables, such as local law enforcement response times or the shooter’s mental health history, influencing the likelihood of fatality that are not captured by the current model.
 
 Additionally, the model estimate for suicide-related shootings exhibited an extremely large standard error. This likely stems from the very limited number of cases in the dataset, with only 12 in the fatal group and none in the non-fatal group, which severely constrains the reliability and generalizability of findings for this category. As a result, any conclusions drawn regarding suicide-related shootings should be interpreted with caution, and future analyses would benefit from larger, more representative samples to improve statistical stability.
 
@@ -535,60 +606,67 @@ Lastly, further validation is necessary to assess the model’s generalizability
 
 ## Raw data variables
 
-- Unique identifier for each shooting incident
-- National Center for Education Statistics (NCES) unique school ID
-- Name of the school
-- NCES unique district ID
-- Name of the school district
-- Date of the shooting
-- School year of shooting 
-- Year of the shooting
-- Approximate time of the shooting
-- Day of the week when the shooting occurred
-- City where the school is located
-- State where the school is located
-- Type of school (Public or Private)
-- Total enrollment at the school at the time of the shooting
-- Number of people killed (excluding the shooter)
-- Number of people injured (excluding the shooter)
-- Total number killed and injured (excluding the shooter)
-- Type of shooting: accidental, hostage suicide, indiscriminate, public suicide, targeted, or unclear
-- Age of the first shooter
-- Gender of the first shooter (Male or Female)
-- Race or ethnicity of the first shooter (American Indian, Black, Hispanic, White, Asian)
-- First shooter’s relationship to the school
-- Indicates if the first shooter died in the incident (yes or no/unknown)
-- How the first shooter died (if deceased)
-- Age of the second shooter (if any)
-- Gender of the second shooter
-- Race or ethnicity of the second shooter
-- Second shooter’s relationship to the school
-- Indicates if the second shooter died (yes or no/unknown)
-- How the second shooter died (if deceased)
-- Number of White students enrolled at the time of shooting
-- Number of Black students enrolled
-- Number of Hispanic students enrolled
-- Number of Asian students enrolled
-- Number of American Indian or Alaskan Native students enrolled
-- Number of Hawaiian Native or Pacific Islander students enrolled (unavailable before 2009)
-- Number of students of two or more races (unavailable before 2009)
-- Presence of a school resource officer or security guard (present or absent/unknown)
-- Weapon(s) used in the shooting
-- Source from which the shooter acquired the weapon(s)
-- Latitude of the school
-- Longitude of the school
-- Full-time equivalent teachers at the school at the time of shooting
-- Lowest grade level offered by the school
-- Highest grade level offered
-- Number of students eligible for free or reduced-price lunch
-- County where the school is located
-- Two-digit state Federal Information Processing Standards (FIPS) code
-- Five-digit county FIPS code
-- NCES urban-centric locale code
+-   Unique identifier for each shooting incident
+-   National Center for Education Statistics (NCES) unique school ID
+-   Name of the school
+-   NCES unique district ID
+-   Name of the school district
+-   Date of the shooting
+-   School year of shooting
+-   Year of the shooting
+-   Approximate time of the shooting
+-   Day of the week when the shooting occurred
+-   City where the school is located
+-   State where the school is located
+-   Type of school (Public or Private)
+-   Total enrollment at the school at the time of the shooting
+-   Number of people killed (excluding the shooter)
+-   Number of people injured (excluding the shooter)
+-   Total number killed and injured (excluding the shooter)
+-   Type of shooting: accidental, hostage suicide, indiscriminate, public suicide, targeted, or unclear
+-   Age of the first shooter
+-   Gender of the first shooter (Male or Female)
+-   Race or ethnicity of the first shooter (American Indian, Black, Hispanic, White, Asian)
+-   First shooter’s relationship to the school
+-   Indicates if the first shooter died in the incident (yes or no/unknown)
+-   How the first shooter died (if deceased)
+-   Age of the second shooter (if any)
+-   Gender of the second shooter
+-   Race or ethnicity of the second shooter
+-   Second shooter’s relationship to the school
+-   Indicates if the second shooter died (yes or no/unknown)
+-   How the second shooter died (if deceased)
+-   Number of White students enrolled at the time of shooting
+-   Number of Black students enrolled
+-   Number of Hispanic students enrolled
+-   Number of Asian students enrolled
+-   Number of American Indian or Alaskan Native students enrolled
+-   Number of Hawaiian Native or Pacific Islander students enrolled (unavailable before 2009)
+-   Number of students of two or more races (unavailable before 2009)
+-   Presence of a school resource officer or security guard (present or absent/unknown)
+-   Weapon(s) used in the shooting
+-   Source from which the shooter acquired the weapon(s)
+-   Latitude of the school
+-   Longitude of the school
+-   Full-time equivalent teachers at the school at the time of shooting
+-   Lowest grade level offered by the school
+-   Highest grade level offered
+-   Number of students eligible for free or reduced-price lunch
+-   County where the school is located
+-   Two-digit state Federal Information Processing Standards (FIPS) code
+-   Five-digit county FIPS code
+-   NCES urban-centric locale code
 
 ## Additional summary plots
 
-```{r fig8, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Distribution of Shooter Age by Killing Occurrence. Bars represent the distribution of shooter ages for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'}
+```{r}
+#| label: fig-fig8
+#| fig-cap: 'Distribution of Shooter Age by Killing Occurrence. Bars represent the distribution of shooter ages for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+
 ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
@@ -608,7 +686,14 @@ ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
         legend.title = element_text(size = 8))
 ```
 
-```{r fig9, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Distribution of Proportion of Non-white student by Killing Occurrence. Bars represent the distribution of proportion of non-white students for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'}
+```{r}
+#| label: fig-fig9
+#| fig-cap: 'Distribution of Proportion of Non-white student by Killing Occurrence. Bars represent the distribution of proportion of non-white students for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+
 ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
@@ -628,7 +713,14 @@ ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
         legend.title = element_text(size = 8))
 ```
 
-```{r fig10, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Distribution of Proportion of Students Eligible for Subsidized Lunch by Killing Occurrence. Bars represent the distribution of proportion of students eligible for subsidized for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'}
+```{r}
+#| label: fig-fig10
+#| fig-cap: 'Distribution of Proportion of Students Eligible for Subsidized Lunch by Killing Occurrence. Bars represent the distribution of proportion of students eligible for subsidized for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+
 ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
   geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
   labs(
@@ -650,7 +742,14 @@ ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
 
 ## Model assumption diagnostics plot
 
-```{r fig11, echo = FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Deviance residuals plotted against fitted values from the logistic regression model. The horizontal dashed red line at zero provides a reference for assessing systematic patterns in the residuals. Random scatter around zero or linear pattern suggests an adequate model fit, whereas visible non-linear structure may indicate model misspecification.'}
+```{r}
+#| label: fig-fig11
+#| fig-cap: 'Deviance residuals plotted against fitted values from the logistic regression model. The horizontal dashed red line at zero provides a reference for assessing systematic patterns in the residuals. Random scatter around zero or linear pattern suggests an adequate model fit, whereas visible non-linear structure may indicate model misspecification.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+
 model = readRDS(here("models/logistic_regression_model.rds"))
 
 # Create a data frame with fitted values and deviance residuals
@@ -676,5 +775,3 @@ ggplot(residuals_df, aes(x = fitted, y = residuals)) +
         legend.text = element_text(size = 7),
         legend.title = element_text(size = 8))
 ```
-
-# Reference
