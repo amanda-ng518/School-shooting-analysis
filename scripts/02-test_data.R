@@ -6,11 +6,12 @@ library(dplyr)
 library(arrow)
 library(knitr)
 library(stringr)
+library(here)
 
 # -----------------------------------------------------------
 # 2. Read in the data 
 # -----------------------------------------------------------
-data = read_parquet("data/00-raw_data/school-shootings-data.parquet")
+data = read_parquet(here("data/00-raw_data/school-shootings-data.parquet"))
 
 # -----------------------------------------------------------
 # 2. Test data 

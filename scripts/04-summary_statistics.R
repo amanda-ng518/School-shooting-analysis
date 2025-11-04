@@ -6,11 +6,12 @@ library(dplyr)
 library(arrow)
 library(knitr)
 library(ggplot2)
+library(here)
 
 # -----------------------------------------------------------
 # 2. Read in the data 
 # -----------------------------------------------------------
-shootings = read_parquet("data/01-cleaned_data/shootings_cleaned.parquet")
+shootings = read_parquet(here("data/01-cleaned_data/shootings_cleaned.parquet"))
 
 nrow(shootings)
 ncol(shootings)
@@ -66,8 +67,8 @@ num_summary_no <- make_summary(filter(shootings, killing_indicator == 0)) %>%
 kable(num_summary_yes, caption = "Shootings with Killings", digits = 2)
 kable(num_summary_no, caption = "Shootings without Killings", digits = 2)
 
-write_parquet(num_summary_yes, "data/02-analysis_data/num_summary_yes.parquet")
-write_parquet(num_summary_no, "data/02-analysis_data/num_summary_no.parquet")
+write_parquet(num_summary_yes, here("data/02-analysis_data/num_summary_yes.parquet"))
+write_parquet(num_summary_no, here("data/02-analysis_data/num_summary_no.parquet"))
 
 # Shooter age histogram
 ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +

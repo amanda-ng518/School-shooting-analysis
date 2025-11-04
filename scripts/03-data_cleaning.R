@@ -6,11 +6,12 @@ library(dplyr)
 library(arrow)
 library(knitr)
 library(stringr)
+library(here)
 
 # -----------------------------------------------------------
 # 2. Read in the data 
 # -----------------------------------------------------------
-data = read_parquet("data/00-raw_data/school-shootings-data.parquet")
+data = read_parquet(here("data/00-raw_data/school-shootings-data.parquet"))
 
 # Number of observation
 nrow(data)
@@ -134,7 +135,7 @@ missing_table$Variable <- new_names[missing_table$Variable]
 
 missing_table <- subset(missing_table, Count > 0)
 
-write_parquet(missing_table, "data/02-analysis_data/missing_table.parquet")
+write_parquet(missing_table, here("data/02-analysis_data/missing_table.parquet"))
 
 kable(missing_table, col.names = c("Variable", "Missing Count", "Missing Proportion (%)"), 
       align = c("l", "r", "r"),
@@ -252,4 +253,4 @@ shootings <- data%>%select(killing_indicator, injured_indicator, school_type, sh
                            non_white_prop, lunch_prop)
 
 # Save dataset
-write_parquet(shootings, "data/01-cleaned_data/shootings_cleaned.parquet")
+write_parquet(shootings, here("data/01-cleaned_data/shootings_cleaned.parquet"))

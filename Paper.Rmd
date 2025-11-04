@@ -13,6 +13,7 @@ bibliography: "references.bib"
 
 ```{r, include=FALSE}
 # Load packages
+library(here)
 library(tidyr)
 library(dplyr)
 library(arrow)
@@ -22,7 +23,7 @@ library(broom)
 library(kableExtra)
 
 # Load data
-shootings = read_parquet("data/01-cleaned_data/shootings_cleaned.parquet")
+shootings = read_parquet(here("data/01-cleaned_data/shootings_cleaned.parquet"))
 ```
 
 # Introduction {#sec-intro}
@@ -56,7 +57,7 @@ One observation had shooter 1's gender recorded as “h”, which was presumed t
 Below is a summary of the (non-zero) count and proportion of missing values in our variables of interest after basic cleaning.
 
 ```{r Table1, echo=FALSE}
-missing_table = read_parquet("data/02-analysis_data/missing_table.parquet")
+missing_table = read_parquet(here("data/02-analysis_data/missing_table.parquet"))
 kable(missing_table, col.names = c("Variable", "Missing Count", "Missing Proportion (%)"), 
       caption = "Summary of Missing Values in Interested Variables")
 ```
@@ -132,8 +133,8 @@ n_no = nrow(killing_no_data)
 ```
 
 ```{r Table3, echo=FALSE}
-num_summary_yes = read_parquet("data/02-analysis_data/num_summary_yes.parquet")
-num_summary_no = read_parquet("data/02-analysis_data/num_summary_no.parquet")
+num_summary_yes = read_parquet(here("data/02-analysis_data/num_summary_yes.parquet"))
+num_summary_no = read_parquet(here("data/02-analysis_data/num_summary_no.parquet"))
 
 kable(num_summary_yes, caption = "Shootings With Killing Occured", digits = 2)%>%
   column_spec(1, width = "2cm")%>%
@@ -399,7 +400,7 @@ Given that our response variable, the killing indicator, is binary, logistic reg
 
 Predictors were chosen to capture key contextual and demographic factors associated with the severity of school shooting outcomes (see \@ref(sec-datasummary)). Shooting type was included as a key predictor because it reflects the shooter’s intention. As shown in Figure \@ref(fig:fig1), shootings resulting in fatalities were more likely to be targeted rather than accidental or unclear. Including shooting type allows the model to examine whether planned and deliberate targeting is associated with fatal outcomes. The shooter’s relationship to the school community further captures intention and social proximity. Figure \@ref(fig:fig4) suggests that shooters with close ties to the school, such as current students or police and campus security, may commit targeted attacks arising from interpersonal conflicts. Including this variable helps assess whether familiarity with the school affects the likelihood of fatalities.
 
-Shooter characteristics, including age and gender, were included to account for personal factors that may influence fatality risk. Age may capture maturity- or experience-related differences, while gender accounts for potential behavioral or psychological differences between males and females (citation).
+Shooter characteristics, including age and gender, were included to account for personal factors that may influence fatality risk. Age may capture maturity- or experience-related differences, while gender accounts for potential behavioral or psychological differences between males and females.
 
 The presence of non-shooter injuries was included as a binary indicator to capture whether any non-shooter was injured. This approach was chosen over modeling the number of injuries due to substantial skewness, as most incidents involved either no additional injuries or a single injury. Figure \@ref(fig:fig5) suggests that fatal shootings are less likely to involve non-shooter injuries, indicating that these incidents may be more deliberate and targeted. Including this variable allows us to formally test whether the presence of non-shooter injuries differentiates less severe shootings from those resulting in fatalities.
 
@@ -417,7 +418,7 @@ Model performance was assessed across a range of probability thresholds using se
 
 All statistical analyses were conducted in R version 4.3.0 [@R]. We relied on several R packages to support data cleaning, modeling, and visualization, including 
 
-- arrow [@arrow], tidyr [@tidyr], dplyr [@dplyr], knitr[@knitr], stringr[@stringr], broom[@broom] for data manipulation
+- arrow [@arrow], tidyr [@tidyr], dplyr [@dplyr], knitr[@knitr], stringr[@stringr], broom[@broom], here[@here] for data manipulation
 - car [@car] for model diagnostics
 - pROC[@pROC] for model evaluation
 - ggplot2 [@ggplot2], kableExtra[@kableExtra] for data visualization and tables. 
@@ -428,7 +429,7 @@ All statistical analyses were conducted in R version 4.3.0 [@R]. We relied on se
 
 Below is a summary table of the coefficient estimates from the fitted logistic regression model. Positive coefficients indicate an increase in the log odds of a fatal outcome relative to the reference category, while negative coefficients indicate a decrease.
 ```{r table5, echo=FALSE}
-modelsummary <- read_parquet("data/02-analysis_data/modelsummary.parquet")
+modelsummary <- read_parquet(here("data/02-analysis_data/modelsummary.parquet"))
 kable(modelsummary, caption = "Summary table of Model Coefficient Estimates")%>%
   column_spec(1, width = "4cm")
 ```
@@ -448,7 +449,7 @@ Overall, these results indicate that contextual factors of the shooting incident
 We conducted a Likelihood Ratio Test to assess the overall significance of the model, rejecting the null hypothesis that none of the covariates are linearly related to the log-odds of a killing occurring ($p = 5.078e-07 < 0.05$). This suggests that at least one predictor in the model is significantly associated with killing occurrence.
 
 ```{r fig6, echo=FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Receiver operating characteristic (ROC) Curve for the logistic regression model. The ROC curve displays the diagnostic performance of the logistic regression model using shootings context-related predictors, with true positive rate plotted against false postive rate. The area under the curve (AUC) is 0.727.'}
-roc_data = read_parquet("data/02-analysis_data/roc_data.parquet")
+roc_data = read_parquet(here("data/02-analysis_data/roc_data.parquet"))
 auc_value <- unique(roc_data$AUC) 
 
 ggplot(roc_data, aes(x = FalsePositiveRate, y = TruePositiveRate)) +
@@ -481,7 +482,7 @@ Sensitivity, specificity, and misclassification rate are key performance metrics
 Below is a figure summarizing sensitivity, specificity, and misclassification rates on the unseen testing data using different threshold values (i.e., the cut-off probability used to classify a shooting incident into the “killing occurred” group).
 
 ```{r fig7, echo = FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Performance Metrics vs. Threshold for the logistic regression model. Each colored line represents the trend of the metric value as the threshold increases from 0 to 1. Red line represents missclassification rate, green line represents sentisivity and blue line represents specificity. '}
-perf_data_long = read_parquet("data/02-analysis_data/perf_data_long.parquet")
+perf_data_long = read_parquet(here("data/02-analysis_data/perf_data_long.parquet"))
 ggplot(perf_data_long, aes(threshold, value, color = metric)) +
   geom_line(linewidth = 0.5) +
   labs(x = "Threshold", y = "Metric value", color = "Metric",
@@ -650,7 +651,7 @@ ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
 ## Model assumption diagnostics plot
 
 ```{r fig11, echo = FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Deviance residuals plotted against fitted values from the logistic regression model. The horizontal dashed red line at zero provides a reference for assessing systematic patterns in the residuals. Random scatter around zero or linear pattern suggests an adequate model fit, whereas visible non-linear structure may indicate model misspecification.'}
-model = readRDS("models/logistic_regression_model.rds")
+model = readRDS(here("models/logistic_regression_model.rds"))
 
 # Create a data frame with fitted values and deviance residuals
 residuals_df <- data.frame(

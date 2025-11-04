@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.11.3)  3 NOV 2025 21:59
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.11.3)  3 NOV 2025 22:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -978,6 +978,9 @@ Overfull \hbox (23.555pt too wide) detected at line 338
 
 [8] [9]
 
+Package natbib Warning: Citation `here' on page 10 undefined on input line 404.
+
+
 Package natbib Warning: Citation `car' on page 10 undefined on input line 406.
 
 [10] [11]
@@ -986,23 +989,32 @@ File: Paper_files/figure-latex/fig6-1.pdf Graphic file (type pdf)
 [12]
 File: Paper_files/figure-latex/fig7-1.pdf Graphic file (type pdf)
 <use Paper_files/figure-latex/fig7-1.pdf>
-[13] [14] [15] (./Paper.bbl [16])
+[13] [14] [15]
+File: Paper_files/figure-latex/fig8-1.pdf Graphic file (type pdf)
+<use Paper_files/figure-latex/fig8-1.pdf>
+File: Paper_files/figure-latex/fig9-1.pdf Graphic file (type pdf)
+<use Paper_files/figure-latex/fig9-1.pdf>
+File: Paper_files/figure-latex/fig10-1.pdf Graphic file (type pdf)
+<use Paper_files/figure-latex/fig10-1.pdf>
+File: Paper_files/figure-latex/fig11-1.pdf Graphic file (type pdf)
+<use Paper_files/figure-latex/fig11-1.pdf>
+(./Paper.bbl [16] [17] [18])
 
 Package natbib Warning: There were undefined citations.
 
-[17] (./Paper.aux)
+[19] (./Paper.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-10-24>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 18995 strings out of 470235
- 343295 string characters out of 5479014
- 920222 words of memory out of 5000000
- 47261 multiletter control sequences out of 15000+600000
+ 19043 strings out of 470235
+ 345071 string characters out of 5479014
+ 921721 words of memory out of 5000000
+ 47305 multiletter control sequences out of 15000+600000
  634270 words of font info for 93 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  90i,11n,114p,1489b,506s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Paper.pdf (17 pages).
+Output written on Paper.pdf (19 pages).
