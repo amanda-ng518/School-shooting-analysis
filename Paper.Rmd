@@ -69,7 +69,7 @@ We collapsed the number of killings and injuries variables into binary indicator
 
 ## Data description
 
-The cleaned data consists of 424 observations and 9 variables. Below is a summary description of all variables in the cleaned dataset.
+The cleaned dataset consists of 424 observations and 9 variables. A summary description of all variables in the cleaned dataset is provided below.
 
 ```{r Table2, echo=FALSE}
 # Create a data frame
@@ -122,7 +122,7 @@ kable(data_description,
 
 ## Data summary and visualizations {#sec-datasummary}
 
-In total, the dataset includes 424 shooting incidents. Among them, 328 cases involved no killings, while 99 cases resulted in at least one killing. This distribution indicates that the majority of school shootings (approximately 77%) did not involve any death excluding the shooter.
+In total, the dataset includes 424 shooting incidents. Among them, 326 cases involved no killings, while 98 cases resulted in at least one killing. This distribution indicates that the majority of school shootings (approximately 77%) did not involve any death excluding the shooter.
 
 ```{r, include = FALSE}
 killing_yes_data = shootings%>%filter(killing_indicator == 1)
@@ -150,7 +150,7 @@ kable(num_summary_no, caption = "Shootings Without Killing Occured", digits = 2)
   column_spec(4, width = "5cm")
 ```
 
-Tables \@ref(tab:Table3) and \@ref(tab:Table4) show that shootings resulting in at least one killing were associated with a slightly older average shooter age, while non-fatal shootings occurred more often in schools with higher proportions of non-white students and students receiving subsidized lunch. These patterns suggest that these variables may influence the likelihood of a shooting being fatal. However, the substantial standard deviations in each numerical variable indicate considerable heterogeneity within each group, highlighting that themselves alone does not fully explain shooting outcomes. This heterogeneity should be kept in mind when interpreting the model results. Additional visualizations are provided in the Appendix.
+Tables \@ref(tab:Table3) and \@ref(tab:Table4) show that shootings resulting in at least one killing were associated with a slightly older average shooter age, while non-fatal shootings occurred more often in schools with higher proportions of non-white students and students receiving subsidized lunch. These patterns suggest that these variables may influence the likelihood of a shooting being fatal. However, the substantial standard deviations in each numerical variable indicate considerable heterogeneity within each group, highlighting that these variables alone do not fully explain shooting outcomes. This heterogeneity should be kept in mind when interpreting the model results. Additional visualizations are provided in Section \@ref(sec-appendix).
 
 ```{r fig1, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Percentage of Shooting cases by Shooting type (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on their shooting type, categorized into five groups: "Accidental", "Indiscriminate", "Suicide", "Targeted" and "Unclear". Each bar is labeled with both the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'}
 # Shooting Type
@@ -192,7 +192,7 @@ ggplot(shooting_type_combined_data, aes(x = shooting_type, y = shooting_type_per
         legend.title = element_text(size = 8))
 ```
 
-Figure \@ref(fig:fig1) suggests that targeted shootings were the most common shooting type and were substantially more prevalent when killings occurred (65.3% in killing occurred shootings vs. 49.1% in no killing shootings), suggesting a strong association between targeted intent shootings and fatal outcomes. In contrast, accidental and unclear shootings were more frequent in non-fatal incidents, while indiscriminate shootings showed a moderate increase when killings occurred (19.4% vs. 11.4%). These patterns indicate that the nature of the shooting event may play a critical role in determining whether killing would occur. Hence, shooting type should be deemed as a key predictor in the model to examine its contribution to the likelihood of a killing.
+Figure \@ref(fig:fig1) suggests that targeted shootings were the most common shooting type and were substantially more prevalent when killings occurred (65.3% in fatal shootings vs. 49.1% in non-fatal shootings), indicating a strong association between targeted intent and fatal outcomes. In contrast, accidental and unclear shootings were more frequent in non-fatal incidents, while indiscriminate shootings showed a moderate increase when killings occurred (19.4% vs. 11.4%). These patterns suggest that the nature of the shooting event may play a critical role in determining whether a killing occurs. Hence, shooting type should be considered a key predictor in the model to examine its contribution to the likelihood of a fatal outcome.
 
 ```{r fig2, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap= 'Percentage of Shooting cases by School type (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on their school type, categorized into two groups: "Private" and "Public". Each bar is labeled with both the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'}
 # School Type
@@ -263,7 +263,7 @@ ggplot(gender_combined_data, aes(x = gender_shooter1, y = gender_percent, fill =
         legend.title = element_text(size = 8))
 ```
 
-Figure \@ref(fig:fig2) and \@ref(fig:fig3) suggest that majority of both fatal and nonfatal school shooting incidents occurred in public schools and shooters are predominately male, accounting for more than 92% of all cases. The near-identical percentages between fatal and nonfatal incidents across the underlying categories suggest that whether a shooting results in a fatality may not strongly associated with whether the school is public or private or the shooter's gender. This pattern indicates that institutional and shooter's gender classification alone may offer limited explanatory power for modeling fatal outcomes. Hence, additional contextual factors, such as the nature of the shooting, the presence of injuries, or the relationship between the shooter and the school, are needed in explaining fatal outcomes.
+Figures \@ref(fig:fig2) and \@ref(fig:fig3) suggest that the majority of both fatal and nonfatal school shooting incidents occurred in public schools, and shooters were predominantly male, accounting for more than 92% of all cases. The near-identical percentages between fatal and nonfatal incidents across these categories suggest that whether a shooting results in a fatality may not be strongly associated with whether the school is public or private or with the shooter’s gender. This pattern indicates that institutional classification and shooter gender alone may offer limited explanatory power for modeling fatal outcomes. Hence, additional contextual factors, such as the nature of the shooting, the presence of injuries, or the relationship between the shooter and the school, are needed to explain fatal outcomes in the model.
 
 ```{r fig4, echo=FALSE,fig.width=8, fig.height=4, fig.align='center', fig.cap= 'Percentage of Shooting cases by Shooter Relationship (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on the shooter\'s relationship with the school community, categorized into six groups: "Current Student", "Family/Guardian of Student", "Former Student", "Non-security Staff", "Police/Security", and "Other/Unknown/No Connection". Each bar is labeled with the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'}
 # shooter_relationship1
@@ -299,7 +299,7 @@ ggplot(shooter_relationship_combined_data, aes(x = shooter_relationship1, y = sh
         legend.title = element_text(size = 8))
 ```
 
-Figure \@ref(fig:fig4) suggests that shooters who were current students account for nearly half of both fatal and nonfatal incidents, indicating that student-perpetrated shootings are the most frequent overall. Notably, percentage of shootings carried out by individuals who are police or security personnel in fatal incidents is more than 3 times to that in nonfatal incidents. This reflects that their access to weapons, gun training, and the high-risk situations in which they are involved may put others at greater risk of death. Conversely, shootings committed by individuals with no known connection to the school are more common in nonfatal incidents (over 40%). These patterns suggest that the shooter’s relationship to the school strongly influences the likelihood of a fatal outcome, and we expect this variable to be a key predictor in the regression model.
+Figure \@ref(fig:fig4) suggests that shooters who were current students accounted for nearly half of both fatal and nonfatal incidents, indicating that student-perpetrated shootings were the most frequent overall. Notably, the percentage of shootings carried out by individuals who were police or security personnel in fatal incidents was more than three times that in nonfatal incidents. This reflects that their access to weapons, firearms training, and the high-risk situations in which they are involved may put others at greater risk of death. Conversely, shootings committed by individuals with no known connection to the school were more common in nonfatal incidents (over 40%). These patterns suggest that the shooter’s relationship to the school strongly influences the likelihood of a fatal outcome, and we expect this variable to be a key predictor in the regression model.
 
 ```{r fig5, echo=FALSE,fig.width=8, fig.height=3.25, fig.align='center', fig.cap='Percentage of Shooting cases by Injured Indicator (Killing occured vs. did not occured). This bar plot illustrates the distribution of all shooting cases based on whether there were injuries excluding the shooter, categorized into six groups: "No injured", and "At least one injured". Each bar is labeled with the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'}
 # injured_indicator
@@ -342,8 +342,7 @@ ggplot(injured_combined_data, aes(x = injured_indicator, y = injured_percent, fi
 
 ```
 
-Figure \@ref(fig:fig5) illustrates that over 60% of fatal cases did not involve additional non-shooter injuries, while majority of non-fatal shootings involved at least one non-shooter injury. This contrast highlights that fatal shootings tend to be more targeted or severe, while non-fatal ones may reflect less severe killing intent or lower accuracy. These descriptive patterns underscore the relevance of injury occurrence as a meaningful variable for modeling fatality risk in school shooting incidents.
-
+Figure \@ref(fig:fig5) illustrates that over 60% of fatal cases did not involve additional non-shooter injuries, while the majority of non-fatal shootings involved at least one non-shooter injury. This contrast highlights that fatal shootings tend to be more targeted or severe, whereas non-fatal ones may reflect less lethal intent or lower accuracy. These descriptive patterns underscore the relevance of injury occurrence as a meaningful variable for modeling fatality risk in school shooting incidents.
 
 # Model {#sec-model}
 
