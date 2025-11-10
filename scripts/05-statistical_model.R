@@ -1,10 +1,17 @@
+#### Preamble ####
+# Purpose: Run statistical models, conduct model diagnostics and evaluations
+# Author: Amanda Ng
+# Date: 9 November 2025
+# Contact: waiyuamanda.ng@mail.utoronto.ca
+# Pre-requisites: 02-data_cleaning.R
+
 # -----------------------------------------------------------
 # 1. Load libraries
 # -----------------------------------------------------------
 library(tidyr)
 library(dplyr)
 library(arrow)
-library(car)         # for VIF
+library(car)         
 library(broom)
 library(pROC)
 library(ggplot2)

@@ -1,3 +1,9 @@
+#### Preamble ####
+# Purpose: Cleans data
+# Author: Amanda Ng
+# Date: 9 November 2025
+# Contact: waiyuamanda.ng@mail.utoronto.ca
+
 # -----------------------------------------------------------
 # 1. Load libraries
 # -----------------------------------------------------------
