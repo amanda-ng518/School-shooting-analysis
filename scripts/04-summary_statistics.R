@@ -1,3 +1,10 @@
+#### Preamble ####
+# Purpose: Conduct EDA to obtain summary statistics and visualizations
+# Author: Amanda Ng
+# Date: 9 November 2025
+# Contact: waiyuamanda.ng@mail.utoronto.ca
+# Pre-requisites: 02-data_cleaning.R
+
 # -----------------------------------------------------------
 # 1. Load libraries
 # -----------------------------------------------------------

@@ -1,9 +1,10 @@
-# School Shooting Analysis
+# Fatal US School Shootings Project
 
 ## Overview
 
-This repo provides students with a foundation for their own projects associated with *Telling Stories with Data*. You do not need every aspect for every paper and you should delete aspects that you do not need.
+This repo provides the codes and files required to conduct the analysis for the Fatal US School Shootings project.
 
+While previous studies have examined impact of individual-level factors like firearm access, mental health, and attacker motivation in mass shootings, less is known about what makes some school shootings fatal and others not. This analysis uses logistic regression on data from The Washington Post School Shootings Database to model the probability that a shooting results in at least one death based on contextual characteristics, such as shooter-school connection, presence of injuries, and socioeconomic composition of students. Findings indicate that incidents involving targeted or indiscriminate intent, no non-shooter injuries, and shooters connected to the school community are more likely to be fatal. These results highlight the need for proactive safety measures focused on behavioral monitoring, threat assessment, and emergency preparedness.
 
 ## File Structure
 
