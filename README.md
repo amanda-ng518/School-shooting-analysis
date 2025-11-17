@@ -30,4 +30,4 @@ The repo is structured as:
 
 ## Statement on LLM usage
 
-Data visualization and summary table codes were written with the help of the auto-complete tool, Copilot. 
+Data visualization and summary table codes were written with the help of the auto-complete tool, Microsoft Copilot. 
