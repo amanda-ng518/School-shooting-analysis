@@ -1,6 +1,6 @@
 ---
 title: "Fatal US School Shootings (1999-2025)"
-subtitle: "Incidents when shooters are affiliated with the school community, carrying out targeted or indiscriminate attacks that result in no non-fatal injuries."
+subtitle: "Incidents when shooters were affiliated with the school community, carrying out targeted or indiscriminate attacks that resulted in no non-fatal injuries."
 author: "Amanda Ng"
 thanks: "Code and data are available at: [https://github.com/amanda-ng518/School-shooting-analysis](https://github.com/amanda-ng518/School-shooting-analysis)."
 date: today
