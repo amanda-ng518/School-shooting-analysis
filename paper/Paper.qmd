@@ -574,6 +574,8 @@ kable(modelsummary, caption = "Summary table of Model Coefficient Estimates")%>%
   column_spec(1, width = "4cm")
 ```
 
+\newpage
+
 **Interpretation**:
 
 The fitted logistic regression model estimates the log-odds of a school shooting resulting in at least one fatality based on the incident context, shooter characteristics, and school-level demographics. The baseline category represents a shooting occurring in private schools that did not involve injuries, with a female shooter who was not affiliated with the school community and had unclear shooting intention.
