@@ -1,4 +1,4 @@
-# Fatal US School Shootings Project
+# Fatal US School Shootings (1999-2025) Project
 
 ## Overview
 
@@ -10,7 +10,7 @@ While previous studies have examined the impact of individual-level factors like
 
 The repo is structured as:
 
--   `data/00-raw_data` contains the raw data as obtained from [The Washington Post School Shooting github](https://github.com/washingtonpost/data-school-shootings), saved in csv and parquet formats.
+-   `data/00-raw_data` contains the raw data as obtained from [The Washington Post School Shooting GitHub](https://github.com/washingtonpost/data-school-shootings), saved in csv and parquet formats.
 -   `data/01-cleaned_data` contains the cleaned dataset that was constructed.
 -   `data/02-analysis_data` contains the interim data, including missing value table, numerical variables statistics summary table, model ROC data, and model performance metrics table.
 -   `model` contains fitted logistic regression model. 
@@ -30,4 +30,4 @@ The repo is structured as:
 
 ## Statement on LLM usage
 
-Data visualization and summary table codes were written with the help of the auto-complete tool, Microsoft Copilot. 
+Data visualization and summary table codes were written with the help of Microsoft Copilot. 
