@@ -586,7 +586,7 @@ This study uses a logistic regression model to examine the factors associated wi
 
 These findings suggest that fatal school shootings may be more predictable when they originate within the school community's existing social or disciplinary networks. Such shooters often exhibit early warning signs, such as behavioral issues, disciplinary history, or peer concerns. Hence, school-based prevention systems focusing on students and staff may be effective in identifying or deterring them beforehand. Moreover, affiliated shooters may enter with greater intent or preparation, potentially bringing more lethal weapons or executing more deliberate plans. Therefore, in addition to internal behavioral monitoring, there is a need for enhanced external security coordination, including improved access control, visitor screening, and robust information-sharing between schools, law enforcement, and community organizations. The findings underscore the importance of rapid emergency response protocols and preparedness training, as these incidents tend to escalate quickly and with consequences beyond injuries.
 
-## Limitation
+## Limitations
 
 As shown in @sec-datasummary, shooter's age, the proportion of non-white students, and the proportion of students eligible for subsidized lunch exhibited high standard deviations within both fatal and non-fatal incident groups. This suggests that these variables alone may not fully capture the underlying characteristics that differentiate fatal from non-fatal shootings. There may be unobserved variables, such as local law enforcement response times or the shooter's mental health history, influencing the likelihood of fatality that are not captured by the current model.
 
