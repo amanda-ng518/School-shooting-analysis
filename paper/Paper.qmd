@@ -41,8 +41,6 @@ Gun violence in schools remains one of the most distressing forms of firearm-rel
 
 The analysis draws on The Washington Post School Shootings Database [@data], which documents every act of gunfire on U.S. primary and secondary school campuses during school hours since 1999. The estimand of interest is the probability that a school shooting results in at least one killing. Using logistic regression, we modeled this probability as a function of several contextual characteristics, including whether the incident involved any injuries, the shooting type, the shooter's demographics and relationship to the school community, and the broader racial and socioeconomic composition of the school.
 
-add numbers
-
 Results show that school shootings with no non-shooter injuries were 3.53 times more likely to result in fatalities. Targeted or indiscriminate shooters involving shooters with some connection to the school community, especially security and students, were over 2 times more likely to result in fatalities. These patterns suggest that fatal school shootings often involve a higher degree of planning, precision, and familiarity with the school environment, resulting in more deliberate and focused attacks. Such findings underscore the importance of preventive strategies such as internal behavioral monitoring of students and staff, robust threat assessment protocols, enhanced communication with law enforcement, and comprehensive emergency preparedness training. Understanding these factors can guide interventions aimed at reducing fatalities and improving overall school safety.
 
 The paper is structured as follows, @sec-data describes the data source, alongside the cleaning and preparation of the dataset for analysis. A summary of key variables and exploratory data visualizations is also presented. @sec-model explains the logistic regression approach used to analyze the relationship between fatality likelihood and contextual characteristics, along with justifications for the model design. @sec-results interprets the effects of predictors and the practical applicability of the model in terms of performance metrics. @sec-discussion summarizes the main findings, limitations of the current study, and outlines directions for future studies. Supporting information, including details of the full dataset and additional plots, is provided in @sec-appendix.
@@ -171,7 +169,88 @@ kable(num_summary_no, caption = "Shootings Without Killing Occured", digits = 2)
   column_spec(4, width = "5cm")
 ```
 
-@tbl-Table3 and @tbl-Table4 show that shootings resulting in at least one killing were associated with a slightly older average shooter age, while non-fatal shootings occurred more often in schools with higher proportions of non-white students and students receiving subsidized lunch. These patterns suggest that these variables may influence the likelihood of a shooting being fatal. However, the substantial standard deviations in each numerical variable indicate considerable heterogeneity within each group, highlighting that these variables alone do not fully explain shooting outcomes. This heterogeneity should be kept in mind when interpreting the model results. Additional visualizations are provided in Section @sec-appendix.
+@tbl-Table3 and @tbl-Table4 show that shootings resulting in at least one killing were associated with a slightly older average shooter age, while non-fatal shootings occurred more often in schools with higher proportions of non-white students and students receiving subsidized lunch. These patterns suggest that these variables may influence the likelihood of a shooting being fatal. However, the substantial standard deviations in each numerical variable indicate considerable heterogeneity within each group, highlighting that these variables alone do not fully explain shooting outcomes. This heterogeneity should be kept in mind when interpreting the model results. See @fig-fig8 to @fig-fig10 for the distributions of these numerical variables between fatal shootings and non-fatal shootings groups.
+
+```{r}
+#| label: fig-fig8
+#| fig-cap: 'Distribution of Shooter Age by Killing Occurrence. Bars represent the distribution of shooter ages for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+#| fig-pos: 'H'
+ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
+  geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
+  labs(
+    title = "Distribution of Shooter Age by Killing Occurrence",
+    x = "Shooter age",
+    y = "Frequency"
+  ) +
+  scale_fill_manual(values = c("0" = "blue", "1" = "red"),
+                    labels = c("No", "Yes")) +
+  guides(fill = guide_legend(title = "Killing Occured")) +
+  theme_minimal() + 
+    theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+```
+
+```{r}
+#| label: fig-fig9
+#| fig-cap: 'Distribution of Proportion of Non-white student by Killing Occurrence. Bars represent the distribution of proportion of non-white students for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+#| fig-pos: 'H'
+ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
+  geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
+  labs(
+    title = "Distribution of Proportion of Non-white student by Killing Occurrence",
+    x = "Proportion of Non-white student",
+    y = "Frequency"
+  ) +
+  scale_fill_manual(values = c("0" = "blue", "1" = "red"),
+                    labels = c("No", "Yes")) +
+  guides(fill = guide_legend(title = "Killing Occured")) +
+  theme_minimal() + 
+    theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+```
+
+```{r}
+#| label: fig-fig10
+#| fig-cap: 'Distribution of Proportion of Students Eligible for Subsidized Lunch by Killing Occurrence. Bars represent the distribution of proportion of students eligible for subsidized for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'
+#| echo: false
+#| fig.width: 8
+#| fig.height: 3.25
+#| fig.align: 'center'
+#| fig-pos: 'H'
+ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
+  geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
+  labs(
+    title = "Distribution of Proportion of Students Eligible for Subsidized Lunch by Killing Occurrence",
+    x = "Proportion of Students Eligible for Subsidized Lunch",
+    y = "Frequency"
+  ) +
+  scale_fill_manual(values = c("0" = "blue", "1" = "red"),
+                    labels = c("No", "Yes")) +
+  guides(fill = guide_legend(title = "Killing Occured")) +
+  theme_minimal() + 
+    theme(axis.text.x = element_text(size = 7),
+        axis.title.x =element_text(size = 8),
+        axis.title.y =element_text(size = 8),
+        plot.title = element_text(size = 12),
+        legend.text = element_text(size = 7),
+        legend.title = element_text(size = 8))
+```
 
 ```{r}
 #| label: fig-fig1
@@ -250,7 +329,7 @@ ggplot(school_type_combined_data, aes(x = school_type, y = school_type_percent, 
   geom_bar(stat = "identity", position = "dodge") +
   geom_text(aes(label = paste0(school_type_percent, "% (", count, ")")), position = position_dodge(width = 0.9), vjust = -0.5, size = 2) +
   labs(
-    title = "Percentage of Shooting cases by School type (Killing occured vs. did not occured)",
+    title = "Percentage of Shooting cases by School type (Killing Occured vs. Did Not Occured)",
     x = "School Type",
     y = "Percentage(%)"
   ) +
@@ -296,7 +375,7 @@ ggplot(gender_combined_data, aes(x = gender_shooter1, y = gender_percent, fill =
   geom_bar(stat = "identity", position = "dodge") +
   geom_text(aes(label = paste0(gender_percent, "% (", count, ")")), position = position_dodge(width = 0.9), vjust = -0.5, size = 2) +
   labs(
-    title = "Percentage of Shooting cases by Shooter Gender (Killing occured vs. did not occured)",
+    title = "Percentage of Shooting cases by Shooter Gender (Killing Occured vs. Did Not Occured)",
     x = "Shooter's Gender",
     y = "Percentage(%)"
   ) +
@@ -315,7 +394,7 @@ ggplot(gender_combined_data, aes(x = gender_shooter1, y = gender_percent, fill =
 ```{r}
 #| label: fig-fig4
 #| fig-cap: >
-#|   Percentage of Shooting cases by Shooter Relationship (Killing occurred vs. did not occur). 
+#|   Percentage of Shooting cases by Shooter Relationship (Killing Occured vs. Did Not Occured). 
 #|   It illustrates the distribution of all shooting cases based on the shooter's relationship 
 #|   with the school community, categorized into six groups: "Current Student", "Family/Guardian of Student", 
 #|   "Former Student", "Non-security Staff", "Police/Security", and "Other/Unknown/No Connection". 
@@ -345,7 +424,7 @@ ggplot(shooter_relationship_combined_data, aes(x = shooter_relationship1, y = sh
   geom_bar(stat = "identity", position = "dodge") +
   geom_text(aes(label = paste0(shooter_relationship_percent, "% (", count, ")")), position = position_dodge(width = 0.9), vjust = -0.5, size = 2) +
   labs(
-    title = "Percentage of Shooting cases by Shooter Relationship (Killing occured vs. did not occured)",
+    title = "Percentage of Shooting cases by Shooter Relationship (Killing Occured vs. Did Not Occured)",
     x = "Shooter's Relationship with School Community",
     y = "Percentage (%)"
   ) +
@@ -363,7 +442,7 @@ ggplot(shooter_relationship_combined_data, aes(x = shooter_relationship1, y = sh
 
 ```{r}
 #| label: fig-fig5
-#| fig-cap: 'Percentage of Shooting cases by Injured Indicator (Killing occured vs. did not occured). It illustrates the distribution of all shooting cases based on whether there were injuries excluding the shooter, categorized into six groups: "No injured", and "At least one injured". Each bar is labeled with the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'
+#| fig-cap: 'Percentage of Shooting cases by Injured Indicator (Killing Occured vs. Did Not Occured). It illustrates the distribution of all shooting cases based on whether there were injuries excluding the shooter, categorized into six groups: "No injured", and "At least one injured". Each bar is labeled with the corresponding percentage and the total counts in brackets within each category. Percentages belonging to the same group sum up to 100%.'
 #| echo: false
 #| fig.width: 8
 #| fig.height: 3.25
@@ -394,7 +473,7 @@ ggplot(injured_combined_data, aes(x = injured_indicator, y = injured_percent, fi
   geom_bar(stat = "identity", position = "dodge") +
   geom_text(aes(label = paste0(injured_percent, "% (", count, ")")), position = position_dodge(width = 0.9), vjust = -0.5, size = 2) +
   labs(
-    title = "Percentage of Shooting cases by Injured Indicator (Killing occured vs. did not occured)",
+    title = "Percentage of Shooting cases by Injured Indicator (Killing Occured vs. Did Not Occured)",
     x = "Injured Indicator",
     y = "Percentage(%)"
   ) +
@@ -509,7 +588,7 @@ We conducted a Likelihood Ratio Test to assess the overall significance of the m
 
 ```{r}
 #| label: fig-fig6
-#| fig-cap: 'Receiver operating characteristic (ROC) Curve for the logistic regression model. The ROC curve displays the diagnostic performance of the logistic regression model using shootings context-related predictors, with true positive rate plotted against false postive rate. The area under the curve (AUC) is 0.727.'
+#| fig-cap: 'Receiver operating characteristic (ROC) Curve for the logistic regression model. The ROC curve displays the diagnostic performance of the logistic regression model using shootings context-related predictors, with true positive rate plotted against false positive rate. The area under the curve (AUC) is 0.727.'
 #| echo: false
 #| fig.width: 8
 #| fig.height: 4
@@ -549,7 +628,7 @@ Below is a figure summarizing sensitivity, specificity, and misclassification ra
 
 ```{r}
 #| label: fig-fig7
-#| fig-cap: 'Performance Metrics vs. Threshold for the logistic regression model. Each colored line represents the trend of the metric value as the threshold increases from 0 to 1. Red line represents missclassification rate, green line represents sentisivity and blue line represents specificity.'
+#| fig-cap: 'Performance Metrics vs. Threshold for the logistic regression model. Each colored line represents the trend of the metric value as the threshold increases from 0 to 1. Red line represents misclassification rate, green line represents sensitivity and blue line represents specificity.'
 #| echo: false
 #| fig.width: 8
 #| fig.height: 4
@@ -662,89 +741,6 @@ Lastly, further validation is necessary to assess the model's generalizability. 
 -   Two-digit state Federal Information Processing Standards (FIPS) code
 -   Five-digit county FIPS code
 -   NCES urban-centric locale code
-
-## Additional summary plots
-
-```{r}
-#| label: fig-fig8
-#| fig-cap: 'Distribution of Shooter Age by Killing Occurrence. Bars represent the distribution of shooter ages for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'
-#| echo: false
-#| fig.width: 8
-#| fig.height: 3.25
-#| fig.align: 'center'
-#| fig-pos: 'H'
-ggplot(shootings, aes(x = age_shooter1, fill = factor(killing_indicator))) +
-  geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
-  labs(
-    title = "Distribution of Shooter Age by Killing Occurrence",
-    x = "Shooter age",
-    y = "Frequency"
-  ) +
-  scale_fill_manual(values = c("0" = "blue", "1" = "red"),
-                    labels = c("No", "Yes")) +
-  guides(fill = guide_legend(title = "Killing Occured")) +
-  theme_minimal() + 
-    theme(axis.text.x = element_text(size = 7),
-        axis.title.x =element_text(size = 8),
-        axis.title.y =element_text(size = 8),
-        plot.title = element_text(size = 12),
-        legend.text = element_text(size = 7),
-        legend.title = element_text(size = 8))
-```
-
-```{r}
-#| label: fig-fig9
-#| fig-cap: 'Distribution of Proportion of Non-white student by Killing Occurrence. Bars represent the distribution of proportion of non-white students for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'
-#| echo: false
-#| fig.width: 8
-#| fig.height: 3.25
-#| fig.align: 'center'
-#| fig-pos: 'H'
-ggplot(shootings, aes(x = non_white_prop, fill = factor(killing_indicator))) +
-  geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
-  labs(
-    title = "Distribution of Proportion of Non-white student by Killing Occurrence",
-    x = "Proportion of Non-white student",
-    y = "Frequency"
-  ) +
-  scale_fill_manual(values = c("0" = "blue", "1" = "red"),
-                    labels = c("No", "Yes")) +
-  guides(fill = guide_legend(title = "Killing Occured")) +
-  theme_minimal() + 
-    theme(axis.text.x = element_text(size = 7),
-        axis.title.x =element_text(size = 8),
-        axis.title.y =element_text(size = 8),
-        plot.title = element_text(size = 12),
-        legend.text = element_text(size = 7),
-        legend.title = element_text(size = 8))
-```
-
-```{r}
-#| label: fig-fig10
-#| fig-cap: 'Distribution of Proportion of Students Eligible for Subsidized Lunch by Killing Occurrence. Bars represent the distribution of proportion of students eligible for subsidized for incidents that did and did not result in at least one killing, with overlapping areas shaded to allow comparison. The red bars correspond to fatal shootings, while the blue bars correspond to non-fatal shootings.'
-#| echo: false
-#| fig.width: 8
-#| fig.height: 3.25
-#| fig.align: 'center'
-#| fig-pos: 'H'
-ggplot(shootings, aes(x = lunch_prop, fill = factor(killing_indicator))) +
-  geom_histogram(bins = 30, position = "identity", alpha = 0.5, color = "black") +
-  labs(
-    title = "Distribution of Proportion of Students Eligible for Subsidized Lunch by Killing Occurrence",
-    x = "Proportion of Students Eligible for Subsidized Lunch",
-    y = "Frequency"
-  ) +
-  scale_fill_manual(values = c("0" = "blue", "1" = "red"),
-                    labels = c("No", "Yes")) +
-  guides(fill = guide_legend(title = "Killing Occured")) +
-  theme_minimal() + 
-    theme(axis.text.x = element_text(size = 7),
-        axis.title.x =element_text(size = 8),
-        axis.title.y =element_text(size = 8),
-        plot.title = element_text(size = 12),
-        legend.text = element_text(size = 7),
-        legend.title = element_text(size = 8))
-```
 
 ## Model assumption diagnostics plot
 
